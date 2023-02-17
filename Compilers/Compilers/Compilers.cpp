@@ -18,22 +18,25 @@ int main(int argc, char* argv[])
 
 	myfile.open(fileName,ios::in);
 
-	regex endProgramReg("$");
+	regex endProgramReg("\\$");
 
 	if (myfile.is_open()) { //checking whether the file is open
 		Lexer myLex; //  Stack allocation. To allocate on the heap use "new Lexer()".
 		string tp;
-		int lineCount = 0;
+		int lineNum = 0;
 		bool endProgram = false;
+		string program = "";
+		int lineCount = 1;
 		while (!endProgram) {
-			string program = "";
 			while (getline(myfile, tp)) { //read data from file object and put it into string.
 				//++lineCount;
 				program += tp;
+				++lineNum;
+				cout << lineNum << endl;
 				if (regex_search(program, endProgramReg)) {
-					endProgram = true;
+					//endProgram = true;
 					cout << program << "\n"; //print the data of the string
-					myLex.lex(program);
+					myLex.lex(program, lineNum, lineCount);
 					program = "";
 				}
 			}
@@ -42,9 +45,6 @@ int main(int argc, char* argv[])
 		myfile.close(); //close the file object.
 	}
 
-	/*
-	myLex.lex();
-	*/
 }
 
 // Run program: Ctrl + F5 or Debug > Start Without Debugging menu
