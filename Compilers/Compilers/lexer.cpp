@@ -6,15 +6,25 @@
 
 using namespace std;
 
+class Token {       
+	public:             
+		string tokenType;
+		string value;
+		Token(string x, string y) {
+			tokenType = x;
+			value = y;
+		}
+		Token(string x) {
+			tokenType = x;
+		}
+};
+
+
 class Lexer {
 
 public:
-
-	Lexer();
 	~Lexer();
-
 	void lex(string);
-	std::list<Token> dataSet;
 
 private:
 	
@@ -23,78 +33,38 @@ private:
 Lexer::~Lexer()
 = default;
 
-class Position {
+/*class Position {
 	int idx;
 	int ln;
 	int col;
 	string code;
 
 	void advance(int);
-};
+};*/
 
 
-class Token {
-	int lineNum;
-	int linePos;
-	string tokenType;
-	string value;
-public:
-	Token(string, string);
-};
+list<Token> codeStringAnalysis(string codeString) {
 
-Token::Token(string type, string value) {
-	tokenType = type;
-	value = value;
-}
-string tokenType(string codeString, std::list<Token> dataSet) {
+	list<Token> dataSet;
 
-	regex openBrac("{");
-	regex closeBrac("}");
 	regex printReg("print");
-	regex openParen("(");
-	regex closeParen(")");
-	regex assignment("=");
 	regex whileReg("while");
+	regex stringReg("string");
+	regex boolReg("boolean");
 	regex ifReg("if");
 	regex spaceReg(" ");
 	regex intReg("int");
-	regex stringReg("string");
-	regex boolReg("boolean");
 	regex charReg("[a-z]");
 	regex digitReg("[0-9]");
-	regex boolEqual("==");
-	regex boolNot("!=");
+	
 	regex falseReg("false");
 	regex trueReg("true");
-	regex addition("+");
-	regex startComment("/*");
-	regex endComment("*/");
-	regex endProgram("$");
 
-	if (regex_search(codeString, openBrac)) {
-		dataSet.insert(dataSet.end(), Token("openBracToken", codeString));
-		cout << "openBracToken" << endl;
-	}
-	else if (regex_search(codeString, closeBrac)) {
-		dataSet.insert(dataSet.end(), Token("closeBracToken", codeString));
-		cout << "closeBracToken" << endl;
-	}
-	else if (regex_search(codeString, printReg)) {
+	if (regex_search(codeString, printReg)) {
 		dataSet.insert(dataSet.end(), Token("printToken", codeString));
 		cout << "printToken" << endl;
 	}
-	else if (regex_search(codeString, openParen)) {
-		dataSet.insert(dataSet.end(), Token("openParenToken", codeString));
-		cout << "openParenToken" << endl;
-	}
-	else if (regex_search(codeString, closeParen)) {
-		dataSet.insert(dataSet.end(), Token("closeParenToken", codeString));
-		cout << "closeParenToken" << endl;
-	}
-	else if (regex_search(codeString, assignment)) {
-		dataSet.insert(dataSet.end(), Token("assignmentToken", codeString));
-		cout << "assignmentToken" << endl;
-	}
+
 	else if (regex_search(codeString, whileReg)) {
 		dataSet.insert(dataSet.end(), Token("whileToken", codeString));
 		cout << "whileToken" << endl;
@@ -123,14 +93,7 @@ string tokenType(string codeString, std::list<Token> dataSet) {
 		dataSet.insert(dataSet.end(), Token("digitToken", codeString));
 		cout << "digitToken" << endl;
 	}
-	else if (regex_search(codeString, boolEqual)) {
-		dataSet.insert(dataSet.end(), Token("boolEqualToken", codeString));
-		cout << "boolEqualToken" << endl;
-	}
-	else if (regex_search(codeString, boolNot)) {
-		dataSet.insert(dataSet.end(), Token("boolNotToken", codeString));
-		cout << "boolNotToken" << endl;
-	}
+
 	else if (regex_search(codeString, falseReg)) {
 		dataSet.insert(dataSet.end(), Token("falseToken", codeString));
 		cout << "falseToken" << endl;
@@ -139,44 +102,153 @@ string tokenType(string codeString, std::list<Token> dataSet) {
 		dataSet.insert(dataSet.end(), Token("trueToken", codeString));
 		cout << "trueToken" << endl;
 	}
-	else if (regex_search(codeString, addition)) {
-		dataSet.insert(dataSet.end(), Token("addToken", codeString));
-		cout << "addToken" << endl;
-	}
-	else if (regex_search(codeString, startComment)) {
-		dataSet.insert(dataSet.end(), Token("startComToken", codeString));
-		cout << "startComToken" << endl;
-	}
-	else if (regex_search(codeString, endComment)) {
-		dataSet.insert(dataSet.end(), Token("endComToken", codeString));
-		cout << "endComToken" << endl;
-	}
-	else if (regex_search(codeString, endProgram)) {
-		dataSet.insert(dataSet.end(), Token("endProgram", codeString));
-		cout << "endProgram" << endl;
-	}
 	else
 		cout << "ERROR!" << endl;
+	return dataSet;
 }
 
-void Lexer::lex(string program)
-{
-	std::list<Token> dataSet;
-	std::list<Token>::iterator it;
-	it = dataSet.begin();
-	int next = 0;
+string symbolAnalysis(string symbolString) {
+
+	regex openBrac("[\\{]");
+	regex closeBrac("[\\}]");
+	regex openParen("[\\(]");
+	regex closeParen("[\\)]");
+	regex assignment("[=]");
+	regex boolEqual("==");
+	regex boolNot("[!=]");
+	regex addition("[\\+]");
+	regex startComment("[/\\*]");
+	regex endComment("[\\*/]");
+	regex endProgram("[\\$]");
+	regex quotes(" ");
+
+	if (regex_match(symbolString, openBrac)) {
+		return "openBracToken";
+	}
+	else if (regex_match(symbolString, startComment)) {
+		return "startComToken";
+	}
+	else if (regex_match(symbolString, endComment)) {
+		return "endComToken";
+	}
+	else if (regex_match(symbolString, endProgram)) {
+		return "endProgram";
+	}
+	else if (regex_match(symbolString, boolEqual)) {
+		return "boolEqualToken";
+	}
+	else if (regex_match(symbolString, boolNot)) {
+		return "boolNotToken";
+	}
+	else if (regex_match(symbolString, closeBrac)) {
+		return "closeBracToken";
+	}
+	else if (regex_match(symbolString, openParen)) {
+		return "openParenToken";
+	}
+	else if (regex_match(symbolString, closeParen)) {
+		return "closeParenToken";
+	}
+	else if (regex_match(symbolString, assignment)) {
+		return "assignmentToken";
+	}
+	else if (regex_match(symbolString, addition)) {
+		return "addToken";
+	}
+	else if (regex_match(symbolString, quotes)) {
+		return "quoteToken";
+	}
+	else
+		return "";
+};
+
+void Lexer::lex(string program) {
+	list<Token> masterTokenStream;
+
+	int counter = 0;
+	string symbol;
+	bool inQuotes = false;
 	string codeString = "";
-	for (auto start = program.begin(); start != program.end(); ++start) {
-		++next;
+	string symbolString = "";
+	//regex symbolReg("[{}()=!/*$]");
+	regex symbolReg("[\\{\\$\\+\\}\\(\\)=!/]");
+	regex doubleSymbolReg("[=!/\\*]");
+	regex charReg("[a-z]");
+	regex digitReg("[0-9]");
+
+	for (int i = 0; i < program.length(); i++) {
+
+		string single = program.substr(i, 1);
 		
+		if (regex_search(single, symbolReg)) {
+
+			if (symbolString == "") {
+				symbolString += program[i];
+				if (regex_search(symbolString, doubleSymbolReg)) {
+					continue;
+				}
+				else {
+					symbol = symbolAnalysis(symbolString);
+					cout << symbol << endl;
+					symbolString = "";
+				}
+			}
+			else {
+				symbolString += program[i];
+				symbol = symbolAnalysis(symbolString);
+				cout << symbol << endl;
+				symbolString = "";
+			}
+				
+			
+			if (codeString != "") {
+				//codeStringAnalysis(codeString);
+				cout << "hit" << endl;
+			}
+		}
+
+		else if (regex_search(single, charReg)) {
+			if (symbolString != "") {
+				symbol = symbolAnalysis(symbolString);
+				if (symbol == "quoteToken") {
+					if (inQuotes)
+						inQuotes = false;
+					else
+						inQuotes = true;
+				}
+				cout << symbol << endl;
+
+				masterTokenStream.push_back(Token(symbol));
+				symbolString = "";
+			}
+			codeString += program[i];
+		}
+
+		else if (regex_search(single, digitReg)) {
+			if (symbolString != "") {
+				symbol = symbolAnalysis(symbolString);
+				if (symbol == "quoteToken") {
+					if (inQuotes)
+						inQuotes = false;
+					else
+						inQuotes = true;
+				}
+				cout << symbol << endl;
+				masterTokenStream.push_back(Token(symbol));
+				symbolString = "";
+			}
+			codeString += program[i];
+		}
+
 
 	}
+
+	for (auto const& i : masterTokenStream) {
+		cout << i.tokenType << endl;
+	}
 	
-	
+	cout << "------------------------------------------------------------------" << endl;
+	cout << "[VERBOSE] Beginning Lexer " << endl;
 
-
-	std::cout << "------------------------------------------------------------------" << std::endl;
-	std::cout << "[VERBOSE] Beginning Lexer " << std::endl;
-
-	std::cout << "------------------------------------------------------------------" << std::endl;
+	cout << "------------------------------------------------------------------" << endl;
 }

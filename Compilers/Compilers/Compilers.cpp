@@ -21,9 +21,9 @@ int main(int argc, char* argv[])
 	regex endProgramReg("$");
 
 	if (myfile.is_open()) { //checking whether the file is open
-		//Lexer myLex; //  Stack allocation. To allocate on the heap use "new Lexer()".
+		Lexer myLex; //  Stack allocation. To allocate on the heap use "new Lexer()".
 		string tp;
-		//int lineCount = 0;
+		int lineCount = 0;
 		bool endProgram = false;
 		while (!endProgram) {
 			string program = "";
@@ -33,6 +33,7 @@ int main(int argc, char* argv[])
 				if (regex_search(program, endProgramReg)) {
 					endProgram = true;
 					cout << program << "\n"; //print the data of the string
+					myLex.lex(program);
 					program = "";
 				}
 			}
