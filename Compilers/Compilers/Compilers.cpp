@@ -23,20 +23,23 @@ int main(int argc, char* argv[])
 	if (myfile.is_open()) { //checking whether the file is open
 		Lexer myLex; //  Stack allocation. To allocate on the heap use "new Lexer()".
 		string tp;
-		int lineNum = 0;
+		int programLineStart = 0;
+		int fileLine = 0;
 		bool endProgram = false;
 		string program = "";
-		int lineCount = 1;
+		int programLines = 0;
 		while (!endProgram) {
 			while (getline(myfile, tp)) { //read data from file object and put it into string.
-				//++lineCount;
+				programLineStart = ++fileLine;
+				cout << "file line" << fileLine << endl;
 				program += tp;
-				++lineNum;
-				cout << lineNum << endl;
+				programLines++;
+				cout << "start" << programLineStart << "lines" << programLines << endl;
 				if (regex_search(program, endProgramReg)) {
-					//endProgram = true;
+					++programLineStart;
+					endProgram = true;
 					cout << program << "\n"; //print the data of the string
-					myLex.lex(program, lineNum, lineCount);
+					myLex.lex(program, programLineStart);
 					program = "";
 				}
 			}
