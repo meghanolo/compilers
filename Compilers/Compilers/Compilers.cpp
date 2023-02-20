@@ -31,10 +31,8 @@ int main(int argc, char* argv[])
 		while (!endProgram) {
 			while (getline(myfile, tp)) { //read data from file object and put it into string.
 				programLineStart = ++fileLine;
-				cout << "file line" << fileLine << endl;
 				program += tp;
 				programLines++;
-				cout << "start" << programLineStart << "lines" << programLines << endl;
 				if (regex_search(program, endProgramReg)) {
 					++programLineStart;
 					endProgram = true;

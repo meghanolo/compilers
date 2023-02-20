@@ -83,18 +83,17 @@ list<Token> codeStringAnalysis(string codeString) {
 		}
 		else if (codeString.substr(0, 3) == "int") {
 		codeString.erase(0, 3);
-		cout << codeString << endl;
 		dataSet.insert(dataSet.end(), Token("intToken", "int"));
 		}
-		else if (regex_search(codeString.substr(0, 1), charReg)) {
-			dataSet.insert(dataSet.end(), Token("charToken", codeString));
+		else if (regex_match(codeString.substr(0, 1), charReg)) {
+			dataSet.insert(dataSet.end(), Token("charToken", codeString.substr(0,1)));
 			//cout << "trueToken" << endl;
-			codeString.erase(0);
+			codeString.erase(0, 1);
 		}
-		else if (regex_search(codeString, digitReg)) {
-			dataSet.insert(dataSet.end(), Token("digitToken", codeString));
+		else if (regex_match(codeString.substr(0, 1), digitReg)) {
+			dataSet.insert(dataSet.end(), Token("digitToken", codeString.substr(0, 1)));
 			//cout << "intToken" << endl;
-			codeString.erase(0);
+			codeString.erase(0, 1);
 		}
 		else {
 			dataSet.insert(dataSet.end(), Token("ERROR", codeString));
@@ -114,7 +113,7 @@ string symbolAnalysis(string symbolString) {
 	regex closeParen("[\\)]");
 	regex assignment("=");
 	regex boolEqual("==");
-	regex boolNot("[!=]");
+	regex boolNot("!=");
 	regex addition("[\\+]");
 	regex startComment("/\\*");
 	regex endComment("\\*/");
@@ -211,7 +210,6 @@ void Lexer::lex(string program, int lineNum) {
 				masterTokenStream.push_back(Token("ERROR", single));
 		}
 		else if (regex_search(single, charReg) || regex_search(single, digitReg)) {
-			cout << "hit" << endl;
 			codeString += single;
 		}
 		else if (regex_search(single, symbolReg)) {
@@ -234,11 +232,8 @@ void Lexer::lex(string program, int lineNum) {
 						inQuotes = true;
 				}
 				if (codeString != "") {
-					cout << "hitnonempt" << endl;
 					temp = codeStringAnalysis(codeString);
 					for (const Token token : temp) {
-						cout << "hitToken" << endl;
-						cout << token.tokenType << endl;
 						masterTokenStream.push_back(token);
 					}
 					codeString = "";
@@ -257,11 +252,8 @@ void Lexer::lex(string program, int lineNum) {
 				}
 			}
 			else if (codeString != "") {
-				cout << "hitnonempt" << endl;
 				temp = codeStringAnalysis(codeString);
 				for (const Token token : temp) {
-					cout << "hitToken" << endl;
-					cout << token.tokenType << endl;
 					masterTokenStream.push_back(token);
 				}
 				codeString = "";
