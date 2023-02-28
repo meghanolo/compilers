@@ -10,9 +10,11 @@ class Token {
 	public:             
 		string tokenType;
 		string value;
-		Token(string x, string y) {
+		int linePosition;
+		Token(string x, string y, int z) {
 			tokenType = x;
 			value = y;
+			linePosition = z;
 		}
 		Token(string x) {
 			tokenType = x;
@@ -43,7 +45,7 @@ Lexer::~Lexer()
 };*/
 
 
-list<Token> codeStringAnalysis(string codeString) {
+list<Token> codeStringAnalysis(string codeString, int linePos) {
 
 	list<Token> dataSet;
 
@@ -51,52 +53,53 @@ list<Token> codeStringAnalysis(string codeString) {
 	regex digitReg("[0-9]");
 
 	while (codeString.length() > 0) {
+		linePos++;
 		if (codeString.substr(0, 7) == "boolean") {
 		//cout << "boolToken" << endl;
 		codeString.erase(0, 7);
-		dataSet.insert(dataSet.end(), Token("boolToken", "boolean"));
+		dataSet.insert(dataSet.end(), Token("boolToken", "boolean", linePos));
 		}
 		else if (codeString.substr(0, 6) == "string") {
 		//cout << "stringToken" << endl;
 		codeString.erase(0, 6);
-		dataSet.insert(dataSet.end(), Token("stringToken", "string"));
+		dataSet.insert(dataSet.end(), Token("stringToken", "string", linePos));
 		}
 		else if (codeString.substr(0, 5) == "print") {
 		//cout << "printToken" << endl;
 		codeString.erase(0, 5);
-		dataSet.insert(dataSet.end(), Token("printToken", "print"));
+		dataSet.insert(dataSet.end(), Token("printToken", "print", linePos));
 		}
 		else if (codeString.substr(0, 5) == "while") {
 		//cout << "whileToken" << endl;
 		codeString.erase(0, 5);
-		dataSet.insert(dataSet.end(), Token("whileToken", "while"));
+		dataSet.insert(dataSet.end(), Token("whileToken", "while", linePos));
 		}
 		else if (codeString.substr(0, 5) == "false") {
 		//cout << "falseToken" << endl;
 		codeString.erase(0, 5);
-		dataSet.insert(dataSet.end(), Token("falseToken", "false"));
+		dataSet.insert(dataSet.end(), Token("falseToken", "false", linePos));
 		}
 		else if (codeString.substr(0, 4) == "true") {
 		//cout << "trueToken" << endl;
 		codeString.erase(0, 4);
-		dataSet.insert(dataSet.end(), Token("trueToken", "true"));
+		dataSet.insert(dataSet.end(), Token("trueToken", "true", linePos));
 		}
 		else if (codeString.substr(0, 3) == "int") {
 		codeString.erase(0, 3);
-		dataSet.insert(dataSet.end(), Token("intToken", "int"));
+		dataSet.insert(dataSet.end(), Token("intToken", "int", linePos));
 		}
 		else if (regex_match(codeString.substr(0, 1), charReg)) {
-			dataSet.insert(dataSet.end(), Token("charToken", codeString.substr(0,1)));
+			dataSet.insert(dataSet.end(), Token("charToken", codeString.substr(0,1), linePos));
 			//cout << "trueToken" << endl;
 			codeString.erase(0, 1);
 		}
 		else if (regex_match(codeString.substr(0, 1), digitReg)) {
-			dataSet.insert(dataSet.end(), Token("digitToken", codeString.substr(0, 1)));
+			dataSet.insert(dataSet.end(), Token("digitToken", codeString.substr(0, 1), linePos));
 			//cout << "intToken" << endl;
 			codeString.erase(0, 1);
 		}
 		else {
-			dataSet.insert(dataSet.end(), Token("ERROR", codeString));
+			dataSet.insert(dataSet.end(), Token("ERROR", codeString, linePos));
 			//cout << "ERROR" << endl;
 			codeString.erase(0);
 		}
@@ -164,6 +167,7 @@ void Lexer::lex(string program, int lineNum) {
 	list<Token> masterTokenStream;
 	list<Token> temp;
 
+	int linePos = 0;
 	int counter = 0;
 	string symbol;
 	bool inQuotes = false;
@@ -181,6 +185,8 @@ void Lexer::lex(string program, int lineNum) {
 
 	for (int i = 0; i < program.length(); i++) {
 
+		linePos++;
+
 		string single = program.substr(i, 1);
 		string iAmComment;
 
@@ -188,7 +194,7 @@ void Lexer::lex(string program, int lineNum) {
 			for (int m = i; m < program.length(); m++) {
 				iAmComment += program[m];
 				if (regex_search(iAmComment, closeComment)) {
-					masterTokenStream.push_back(Token("closeComToken", "*/"));
+					masterTokenStream.push_back(Token("closeComToken", "*/", linePos));
 					isComment = false;
 					i = m;
 					break;
@@ -197,17 +203,17 @@ void Lexer::lex(string program, int lineNum) {
 		}
 		else if (inQuotes == true) {
 			if (regex_search(single, charReg)) {
-				masterTokenStream.push_back(Token("charToken", single));
+				masterTokenStream.push_back(Token("charToken", single, linePos));
 			}
 			else if (regex_search(single, spaceReg)) {
-				masterTokenStream.push_back(Token("spaceToken", " "));
+				masterTokenStream.push_back(Token("spaceToken", " ", linePos));
 			}
 			else if (regex_search(single, quoteReg)) {
-				masterTokenStream.push_back(Token("quoteToken"));
+				masterTokenStream.push_back(Token("quoteToken", "\"", linePos));
 				inQuotes = false;
 			}
 			else
-				masterTokenStream.push_back(Token("ERROR", single));
+				masterTokenStream.push_back(Token("ERROR", single, linePos));
 		}
 		else if (regex_search(single, charReg) || regex_search(single, digitReg)) {
 			codeString += single;
@@ -218,7 +224,7 @@ void Lexer::lex(string program, int lineNum) {
 				if (regex_search(program.substr(i + 1, 1), symbolReg)) {
 					symbolString += program.substr(i + 1, 1);
 					symbol = symbolAnalysis(symbolString);
-					masterTokenStream.push_back(Token(symbol, symbolString));
+					masterTokenStream.push_back(Token(symbol, symbolString, linePos));
 					symbolString = "";
 					i++;
 				}
@@ -232,13 +238,13 @@ void Lexer::lex(string program, int lineNum) {
 						inQuotes = true;
 				}
 				if (codeString != "") {
-					temp = codeStringAnalysis(codeString);
+					temp = codeStringAnalysis(codeString, linePos);
 					for (const Token token : temp) {
 						masterTokenStream.push_back(token);
 					}
 					codeString = "";
 					symbol = symbolAnalysis(symbolString);
-					masterTokenStream.push_back(Token(symbol, symbolString));
+					masterTokenStream.push_back(Token(symbol, symbolString, linePos));
 					if (symbol == "startComToken") {
 						isComment = true;
 					}
@@ -252,13 +258,13 @@ void Lexer::lex(string program, int lineNum) {
 				}
 			}
 			else if (codeString != "") {
-				temp = codeStringAnalysis(codeString);
+				temp = codeStringAnalysis(codeString, linePos);
 				for (const Token token : temp) {
 					masterTokenStream.push_back(token);
 				}
 				codeString = "";
 				symbol = symbolAnalysis(symbolString);
-				masterTokenStream.push_back(Token(symbol, symbolString));
+				masterTokenStream.push_back(Token(symbol, symbolString, linePos));
 				if (symbol == "startComToken") {
 					isComment = true;
 				}
@@ -272,7 +278,7 @@ void Lexer::lex(string program, int lineNum) {
 			}
 			else {
 				symbol = symbolAnalysis(symbolString);
-				masterTokenStream.push_back(Token(symbol, symbolString));
+				masterTokenStream.push_back(Token(symbol, symbolString, linePos));
 				if (symbol == "startComToken") {
 					isComment = true;
 				}
@@ -290,82 +296,7 @@ void Lexer::lex(string program, int lineNum) {
 		else if (regex_search(single, spaceReg))
 			continue;
 		else
-			masterTokenStream.push_back(Token("ERROR", single));
-		/*
-		if (regex_search(single, charReg)) {
-				if (symbolString != "") {
-					symbol = symbolAnalysis(symbolString);
-					if (symbol == "startComToken") {
-						isComment = true;
-					}
-					if (symbol == "quoteToken") {
-						if (inQuotes == true)
-							inQuotes = false;
-						else
-							inQuotes = true;
-					}
-					//cout << symbol << endl;
-					masterTokenStream.push_back(Token(symbol, symbolString));
-					symbolString = "";
-					for (const Token token : codeStringAnalysis(codeString)) {
-						cout << "hit" << endl;
-						cout << codeString << endl;
-						masterTokenStream.push_back(token);
-						codeString = "";
-					}
-
-				}*/
-		/*else {
-			symbolString += program[i];
-			symbol = symbolAnalysis(symbolString);
-			if (symbol == "startComToken") {
-				isComment = true;
-			}
-			if (symbol == "quoteToken") {
-				if (inQuotes == true)
-					inQuotes = false;
-				else
-					inQuotes = true;
-			}
-			//cout << symbol << endl;
-			masterTokenStream.push_back(Token(symbol, symbolString));
-			symbolString = "";
-		}*/
-		
-			/*else if (regex_search(single, digitReg)) {
-				if (symbolString != "") {
-					for (const Token token : codeStringAnalysis(codeString)) {
-						cout << "hit" << endl;
-						cout << codeString << endl;
-						masterTokenStream.push_back(token);
-						codeString = "";
-					}
-					symbol = symbolAnalysis(symbolString);
-					if (symbol == "startComToken") {
-						isComment = true;
-					}
-					if (symbol == "quoteToken") {
-						if (inQuotes == true)
-							inQuotes = false;
-						else
-							inQuotes = true;
-					}
-					//cout << symbol << endl;
-					masterTokenStream.push_back(Token(symbol, symbolString));
-					symbolString = "";
-				}
-				codeString += program[i];
-			}
-
-			else if (regex_search(single, spaceReg)) {
-				continue;
-			}
-
-			else
-				masterTokenStream.push_back(Token("ERROR", single));
-				
-		}
-	*/
+			masterTokenStream.push_back(Token("ERROR", single, linePos));
 }
 
 	cout << "------------------------------------------------------------------" << endl;
@@ -374,8 +305,9 @@ void Lexer::lex(string program, int lineNum) {
 	cout << "------------------------------------------------------------------" << endl;
 
 	for (auto const& i : masterTokenStream) {
-		cout << "LEXER --> | " << i.tokenType << " [ " << i.value << " ] on line " << lineNum << endl;
+		cout << "LEXER --> | " << i.tokenType << " [ " << i.value << " ] on line [" << lineNum << ":" << i.linePosition << "] " << endl;
 	}
 	
+	cout << "\n\n" << endl;
 	
 }
