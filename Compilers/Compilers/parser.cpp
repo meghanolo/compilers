@@ -5,13 +5,13 @@
 #include <list>
 #include <vector>
 
+using namespace std;
+
 // Define the different types of tokens
 enum TokenType {
     program,
     block,
     printStatement
-
-   
 };
 
 // Define a struct to represent a token
@@ -20,26 +20,11 @@ struct ParseToken {
     std::string value;
 };
 
-// Define a function to tokenize a string of C++ code
-/*std::vector<Token> tokenize(std::string code) {
-    // ... implementation of tokenizing function ...
-    // Returns a vector of Token objects
-}*/
-
-// Define a function to parse a stream of tokens
-// Returns a pointer to the root node of the syntax tree
-//TreeNode* parse(std::vector<Token>& tokens) {
-    // ... implementation of parsing function ...
-    // Returns a pointer to the root node of the syntax tree
-//}
-
-// Define a struct to represent a node in the syntax tree
-struct TreeNode {
-    std::string type;
-    std::vector<TreeNode*> children;
+struct Node {
+    string name;
+    vector<Node*> children;
 };
 
-using namespace std;
 
 class Parser {
 
@@ -54,48 +39,62 @@ private:
 Parser::~Parser()
 = default;
 
-/*
-void parseProgram() {
-//Block $
-addNode(root, program);
-parseBlock();
-match("$");
-moveUp();
+void printCST(Node* node, int indent = 0) {
+    for (int i = 0; i < indent; i++) {
+        cout << "  ";
+    }
+    cout << node->name << endl;
+
+    for (int i = 0; i < node->children.size(); i++) {
+        printCST(node->children[i], indent + 1);
+    }
 }
 
-void parseBlock() {
+void parseProgram(list<Token> lexerList) {
+//Block $
+    Node* program = new Node();
+    program->name = "Program";
+
+    lexerList.pop_front();
+
+    parseBlock(lexerList);
+    match("$");
+//moveUp();
+}
+
+void parseBlock(list<Token> lexerList) {
 // { StatementList }
-addNode(branch, block);
-match("{");
-parseStatementList();
+//addNode(branch, block);
+//match("{");
+parseStatementList(lexerList);
 match("}");
 
-moveUp();
+//moveUp();
 }
 
-void parseStatement() {
+void parseStatement(list<Token> lexerList) {
 addNode(branch, statement);
 if (token = printStatement) 
     parsePrint();
 else if (token = assignmentStatement)
-    parseAssignmentStatement();
+    parseAssignmentStatement(lexerList);
 else if (token = varDecl) 
-    parseVarDecl();
+    parseVarDecl(lexerList);
 else if (token = while)
-    parseWhile();
+    parseWhile(lexerList);
 else if (token = if)
     parseIf();
 else
-    parseBlock();
+    parseBlock(lexerList);
 
 moveUp();
 }
 
-void parseStatementList() {
+void parseStatementList(list<Token> lexerList) {
 addNode(branch, statementList);
 if (token = statement) {
-    parseStatement();
-    parseStatementList();
+    parseStatement(lexerList);
+    parseStatementList(lexerList);
  }
  else
     //continue
@@ -103,153 +102,159 @@ if (token = statement) {
 moveUp();
 }
 
-void parsePrintStatement() {
+void parsePrintStatement(list<Token> lexerList) {
 addNode(branch, printStatement);
 match("print");
 match("(");
-parseStatement();
+parseStatement(lexerList);
 match(")");
 moveUp();
 }
 
-void parseAssignmentStatement() {
+void parseAssignmentStatement(list<Token> lexerList) {
 addNode(branch, assignmentStatement);
-ParseId();
+ParseId(lexerList);
 match("=");
-parseExpression();
+parseExpression(lexerList);
 moveUp();
 }
 
-void parseVarDecl() {
+void parseVarDecl(list<Token> lexerList) {
 addNode(branch, varDecl);
-parseType();
-parseId();
+parseType(lexerList);
+parseId(lexerList);
 moveUp();
 }
 
-void parseWhileStatement() {
+void parseWhileStatement(list<Token> lexerList) {
 addNode(branch, while);
 match("while");
-parseBooleanExpr();
-parseBlock();
+parseBooleanExpr(lexerList);
+parseBlock(lexerList);
 moveUp();
 }
 
-void parseIfStatement() {
+void parseIfStatement(list<Token> lexerList) {
 addNode(branch, if);
 match("if");
-parseBooleanExpr();
-parseBlock();
+parseBooleanExpr(lexerList);
+parseBlock(lexerList);
 moveUp();
 }
 
-void parseExpr() {
+void parseExpr(list<Token> lexerList) {
 addNode(branch, expr);
 if (token = 
 
 moveUp();
 }
 
-parseIntExpr() {
+parseIntExpr(list<Token> lexerList) {
 addNode(branch, intExpr);
 
 moveUp();
 }
 
-parseStringExpr() {
+void parseStringExpr(list<Token> lexerList) {
 addNode(branch, stringExpr);
 
 moveUp();
 }
 
-parseBooleanExpr() {
+void parseBooleanExpr(list<Token> lexerList) {
 addNode(branch, boolExpr);
 
 moveUp();
 }
 
-parseId() {
+void parseId(list<Token> lexerList) {
 addNode(branch, id);
 
 moveUp();
 }
 
-parseCharList() {
+void parseCharList(list<Token> lexerList) {
 addNode(branch, charList);
 
 moveUp();
 }
 
-parseType() {
+void parseType(list<Token> lexerList) {
 addNode(branch, type);
 
 moveUp();
 }
 
-parseChar() {
+void parseChar(list<Token> lexerList) {
 addNode(branch, char);
 
 moveUp();
 }
 
-parseSpace() {
+void parseSpace(list<Token> lexerList) {
 addNode(branch, space);
 
 moveUp();
 }
 
-parseDigit() {
+void parseDigit(list<Token> lexerList) {
 addNode(branch, digit);
 
 moveUp();
 }
 
-parseBoolOp() {
+void parseBoolOp(list<Token> lexerList) {
 addNode(branch, boolop);
 
 moveUp();
 }
 
-parseBoolVal() {
+void parseBoolVal(list<Token> lexerList) {
 addNode(branch, boolVal);
 
 moveUp();
 }
 
-parseIntOp() {
+void parseIntOp(list<Token> lexerList) {
 addNode(branch, intOp);
-match(+);
+match("+");
 moveUp();
 }
 
-parseComment() {
+void parseComment(list<Token> lexerList) {
 addNode(branch, comment);
 
 moveUp();
 }
 
 
-
-
-
-void match(expected) {
-	x = checkExpected
-	if x addNode(leaf, x)
-		else error
+void match(string expected) {
+	//x = checkExpected
+	//if x addNode(leaf, x)
+		//else error
 }
-*/
+Node* parseList(list<Token> masterTokenStreamLexed) {
+    Node* root = new Node();
+    root->name = "Program";
+
+    parseProgram(masterTokenStreamLexed);
+
+    // Implement the parsing logic here
+
+    return root;
+}
+
 void Parser::parse(list<Token> masterTokenStreamLexed) {
     
+    string tokenType;
+    string value;
     for (auto const& i : masterTokenStreamLexed) {
         tokenType = i.tokenType;
         value = i.value;
-        parse
+        
         //std::cout << i.value << "hit" << endl;
     }
-    //std::string code = "int main() { return 0; }";
-    //std::vector<Token> tokens = tokenize(code);
-    //TreeNode* root;
-    //parse(tokens)
-    // ... do something with the syntax tree ...
-    //return 0;
+
+    Node* root = parseList(masterTokenStreamLexed);
+    printCST(root);
 }
