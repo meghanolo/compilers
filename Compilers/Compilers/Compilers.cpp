@@ -15,7 +15,7 @@ int main(int argc, char* argv[])
 {
     //std::cout << "Hello World!\n";
 	
-	list<Token> lexResult;
+	vector<Token> lexResult;
 	fstream myfile;
 	string fileName = argv[1];
 

@@ -1,4 +1,17 @@
 ﻿  Compilers.cpp
-C:\Users\meggi\compilers\Compilers\Compilers\lexer.cpp(185,20): warning C4018: '<': signed/unsigned mismatch
-C:\Users\meggi\compilers\Compilers\Compilers\lexer.cpp(193,22): warning C4018: '<': signed/unsigned mismatch
-  Compilers.vcxproj -> C:\Users\meggi\compilers\Compilers\Debug\Compilers.exe
+C:\Users\meggi\compilers\Compilers\Compilers\lexer.cpp(190,20): warning C4018: '<': signed/unsigned mismatch
+C:\Users\meggi\compilers\Compilers\Compilers\lexer.cpp(198,22): warning C4018: '<': signed/unsigned mismatch
+C:\Users\meggi\compilers\Compilers\Compilers\parser.cpp(47,23): warning C4018: '<': signed/unsigned mismatch
+C:\Users\meggi\compilers\Compilers\Compilers\parser.cpp(160,31): error C3861: 'parseStatementList': identifier not found
+C:\Users\meggi\compilers\Compilers\Compilers\parser.cpp(176,40): error C3861: 'parseVarDecl': identifier not found
+C:\Users\meggi\compilers\Compilers\Compilers\parser.cpp(178,40): error C3861: 'parseVarDecl': identifier not found
+C:\Users\meggi\compilers\Compilers\Compilers\parser.cpp(180,40): error C3861: 'parseVarDecl': identifier not found
+C:\Users\meggi\compilers\Compilers\Compilers\parser.cpp(249,39): error C3861: 'parsePrintStatement': identifier not found
+C:\Users\meggi\compilers\Compilers\Compilers\parser.cpp(253,39): error C3861: 'parseVarDecl': identifier not found
+C:\Users\meggi\compilers\Compilers\Compilers\parser.cpp(255,39): error C3861: 'parseVarDecl': identifier not found
+C:\Users\meggi\compilers\Compilers\Compilers\parser.cpp(257,39): error C3861: 'parseVarDecl': identifier not found
+C:\Users\meggi\compilers\Compilers\Compilers\parser.cpp(259,39): error C3861: 'parseWhileStatement': identifier not found
+C:\Users\meggi\compilers\Compilers\Compilers\parser.cpp(297,43): error C3861: 'parseVarDecl': identifier not found
+C:\Users\meggi\compilers\Compilers\Compilers\parser.cpp(301,43): error C3861: 'parseVarDecl': identifier not found
+C:\Users\meggi\compilers\Compilers\Compilers\parser.cpp(305,43): error C3861: 'parseVarDecl': identifier not found
+C:\Users\meggi\compilers\Compilers\Compilers\parser.cpp(309,43): error C3861: 'parseWhileStatement': identifier not found

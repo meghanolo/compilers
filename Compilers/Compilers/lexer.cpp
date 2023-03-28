@@ -2,7 +2,7 @@
 #include <regex>
 #include <iostream>
 #include <string>
-#include <list>
+#include <vector>
 
 using namespace std;
 
@@ -26,7 +26,7 @@ class Lexer {
 
 public:
 	~Lexer();
-	list<Token> lex(string, int);
+	vector<Token> lex(string, int);
 
 private:
 
@@ -44,9 +44,9 @@ Lexer::~Lexer()
 };*/
 
 
-list<Token> codeStringAnalysis(string codeString, int linePos) {
+vector<Token> codeStringAnalysis(string codeString, int linePos) {
 
-	list<Token> dataSet;
+	vector<Token> dataSet;
 
 	regex charReg("[a-z]");
 	regex digitReg("[0-9]");
@@ -72,6 +72,11 @@ list<Token> codeStringAnalysis(string codeString, int linePos) {
 			//cout << "whileToken" << endl;
 			codeString.erase(0, 5);
 			dataSet.insert(dataSet.end(), Token("whileToken", "while", linePos));
+		}
+		else if (codeString.substr(0, 2) == "if") {
+			//cout << "ifToken" << endl;
+			codeString.erase(0, 2);
+			dataSet.insert(dataSet.end(), Token("ifToken", "if", linePos));
 		}
 		else if (codeString.substr(0, 5) == "false") {
 			//cout << "falseToken" << endl;
@@ -162,9 +167,9 @@ string symbolAnalysis(string symbolString) {
 		return "ERROR";
 };
 
-list<Token> Lexer::lex(string program, int lineNum) {
-	list<Token> masterTokenStream;
-	list<Token> temp;
+vector<Token> Lexer::lex(string program, int lineNum) {
+	vector<Token> masterTokenStream;
+	vector<Token> temp;
 
 	int linePos = 0;
 	int counter = 0;
