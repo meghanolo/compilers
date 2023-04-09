@@ -6,8 +6,8 @@
 
 using namespace std;
 
-bool isComment = false;
-bool inQuotes = false;
+bool isComment;
+bool inQuotes;
 
 class Token {
 public:
@@ -179,8 +179,6 @@ vector<Token> Lexer::lex(string program, int lineNum) {
 	int linePos = 0;
 	int counter = 0;
 	string symbol;
-	bool inQuotes = false;
-	bool isComment = false;
 	string codeString = "";
 	string symbolString = "";
 	regex symbolReg("[\\{\\$\\+\\}\\(\\)=!/\\*\"]");
@@ -191,120 +189,78 @@ vector<Token> Lexer::lex(string program, int lineNum) {
 	regex closeComment("\\*/");
 	regex quoteReg("[\"]");
 	regex newLine("[\n]");
+	string iAmComment;
+	string single = "";
+	isComment = false;
+	inQuotes = false;
 
 	for (int i = 0; i < program.length(); i++) {
 
-		string single = program.substr(i, 1);
-		string iAmComment;
+		single = program.substr(i, 1);
 
 		if (isComment == true) {
 			for (int m = i; m < program.length(); m++) {
-				iAmComment += program[m];
+				iAmComment = program.substr(m, 2);
 				if (regex_search(iAmComment, closeComment)) {
-					masterTokenStream.push_back(Token("closeComToken", "*/", linePos));
+					masterTokenStream.push_back(Token("closeComToken", "*/", i));
 					isComment = false;
-					i = m;
+					i = ++m;
 					break;
 				}
 			}
 		}
 		else if (inQuotes == true) {
-			if (regex_search(single, charReg)) {
-				masterTokenStream.push_back(Token("charToken", single, linePos));
-			}
-			else if (regex_search(single, spaceReg)) {
-				masterTokenStream.push_back(Token("spaceToken", " ", linePos));
-			}
-			else if (regex_search(single, quoteReg)) {
-				masterTokenStream.push_back(Token("quoteToken", "\"", linePos));
+			if (regex_search(single, quoteReg)) {
+				masterTokenStream.push_back(Token("quoteToken", "\"", i));
 				inQuotes = false;
 			}
+			else if (regex_search(single, charReg)) {
+				masterTokenStream.push_back(Token("charToken", single, i));
+			}
+			else if (regex_search(single, spaceReg)) {
+				masterTokenStream.push_back(Token("spaceToken", " ", i));
+			}
 			else
-				masterTokenStream.push_back(Token("ERROR", single, linePos));
-		}
-		else if (regex_search(single, charReg) || regex_search(single, digitReg)) {
-			codeString += single;
+				masterTokenStream.push_back(Token("ERROR", single, i));
 		}
 		else if (regex_search(single, symbolReg)) {
 			symbolString += single;
-			if (regex_search(symbolString, doubleSymbolReg)) {
-				if (regex_search(program.substr(i + 1, 1), symbolReg)) {
-					symbolString += program.substr(i + 1, 1);
-					symbol = symbolAnalysis(symbolString);
-					masterTokenStream.push_back(Token(symbol, symbolString, linePos));
-					symbolString = "";
-					i++;
-				}
-				if (symbol == "startComToken") {
-					isComment = true;
-				}
-				if (symbol == "quoteToken") {
-					if (inQuotes)
-						inQuotes = false;
-					else
-						inQuotes = true;
-				}
-				if (codeString != "") {
-					temp = codeStringAnalysis(codeString, linePos);
-					for (const Token token : temp) {
-						masterTokenStream.push_back(token);
-					}
-					codeString = "";
-					symbol = symbolAnalysis(symbolString);
-					masterTokenStream.push_back(Token(symbol, symbolString, linePos));
-					if (symbol == "startComToken") {
-						isComment = true;
-					}
-					if (symbol == "quoteToken") {
-						if (inQuotes)
-							inQuotes = false;
-						else
-							inQuotes = true;
-					}
-					symbolString = "";
-				}
-			}
-			else if (codeString != "") {
-				temp = codeStringAnalysis(codeString, linePos);
+			if (codeString != "") {
+				temp = codeStringAnalysis(codeString, i);
 				for (const Token token : temp) {
 					masterTokenStream.push_back(token);
 				}
 				codeString = "";
-				symbol = symbolAnalysis(symbolString);
-				masterTokenStream.push_back(Token(symbol, symbolString, linePos));
-				if (symbol == "startComToken") {
-					isComment = true;
+			}
+			if (regex_search(symbolString, doubleSymbolReg)) {
+				if (regex_search(program.substr(i + 1, 1), symbolReg)) {
+					symbolString += program.substr(i + 1, 1);
+					symbol = symbolAnalysis(symbolString);
+					masterTokenStream.push_back(Token(symbol, symbolString, i));
+					symbolString = "";
+					i++;
 				}
-				if (symbol == "quoteToken") {
-					if (inQuotes)
-						inQuotes = false;
-					else
-						inQuotes = true;
+				else {
+					symbol = symbolAnalysis(symbolString);
+					masterTokenStream.push_back(Token(symbol, symbolString, i));
+					symbolString = "";
 				}
-				symbolString = "";
 			}
 			else {
-				symbol = symbolAnalysis(symbolString);
-				masterTokenStream.push_back(Token(symbol, symbolString, linePos));
-				if (symbol == "startComToken") {
-					isComment = true;
-				}
-				if (symbol == "quoteToken") {
-					if (inQuotes)
-						inQuotes = false;
-					else
-						inQuotes = true;
-				}
-				symbolString = "";
+					symbol = symbolAnalysis(symbolString);
+					masterTokenStream.push_back(Token(symbol, symbolString, i));
+					symbolString = "";
 			}
 
+					
+				}
 
-		}
 		else if (regex_search(single, spaceReg))
 			continue;
 		else
-			masterTokenStream.push_back(Token("ERROR", single, linePos));
-	}
+			codeString += single;
+	
+}
 
 	cout << "------------------------------------------------------------------" << endl;
 	cout << "[VERBOSE] Beginning Lexer " << endl;
