@@ -6,6 +6,9 @@
 
 using namespace std;
 
+bool isComment = false;
+bool inQuotes = false;
+
 class Token {
 public:
 	string tokenType;
@@ -56,54 +59,54 @@ vector<Token> codeStringAnalysis(string codeString, int linePos) {
 		if (codeString.substr(0, 7) == "boolean") {
 			//cout << "boolToken" << endl;
 			codeString.erase(0, 7);
-			dataSet.insert(dataSet.end(), Token("boolToken", "boolean", linePos));
+			dataSet.push_back(Token("boolToken", "boolean", linePos));
 		}
 		else if (codeString.substr(0, 6) == "string") {
 			//cout << "stringToken" << endl;
 			codeString.erase(0, 6);
-			dataSet.insert(dataSet.end(), Token("stringToken", "string", linePos));
+			dataSet.push_back(Token("stringToken", "string", linePos));
 		}
 		else if (codeString.substr(0, 5) == "print") {
 			//cout << "printToken" << endl;
 			codeString.erase(0, 5);
-			dataSet.insert(dataSet.end(), Token("printToken", "print", linePos));
+			dataSet.push_back(Token("printToken", "print", linePos));
 		}
 		else if (codeString.substr(0, 5) == "while") {
 			//cout << "whileToken" << endl;
 			codeString.erase(0, 5);
-			dataSet.insert(dataSet.end(), Token("whileToken", "while", linePos));
+			dataSet.push_back(Token("whileToken", "while", linePos));
 		}
 		else if (codeString.substr(0, 2) == "if") {
 			//cout << "ifToken" << endl;
 			codeString.erase(0, 2);
-			dataSet.insert(dataSet.end(), Token("ifToken", "if", linePos));
+			dataSet.push_back(Token("ifToken", "if", linePos));
 		}
 		else if (codeString.substr(0, 5) == "false") {
 			//cout << "falseToken" << endl;
 			codeString.erase(0, 5);
-			dataSet.insert(dataSet.end(), Token("falseToken", "false", linePos));
+			dataSet.push_back(Token("falseToken", "false", linePos));
 		}
 		else if (codeString.substr(0, 4) == "true") {
 			//cout << "trueToken" << endl;
 			codeString.erase(0, 4);
-			dataSet.insert(dataSet.end(), Token("trueToken", "true", linePos));
+			dataSet.push_back(Token("trueToken", "true", linePos));
 		}
 		else if (codeString.substr(0, 3) == "int") {
 			codeString.erase(0, 3);
-			dataSet.insert(dataSet.end(), Token("intToken", "int", linePos));
+			dataSet.push_back(Token("intToken", "int", linePos));
 		}
 		else if (regex_match(codeString.substr(0, 1), charReg)) {
-			dataSet.insert(dataSet.end(), Token("charToken", codeString.substr(0, 1), linePos));
+			dataSet.push_back(Token("charToken", codeString.substr(0, 1), linePos));
 			//cout << "trueToken" << endl;
 			codeString.erase(0, 1);
 		}
 		else if (regex_match(codeString.substr(0, 1), digitReg)) {
-			dataSet.insert(dataSet.end(), Token("digitToken", codeString.substr(0, 1), linePos));
+			dataSet.push_back(Token("digitToken", codeString.substr(0, 1), linePos));
 			//cout << "intToken" << endl;
 			codeString.erase(0, 1);
 		}
 		else {
-			dataSet.insert(dataSet.end(), Token("ERROR", codeString, linePos));
+			dataSet.push_back(Token("ERROR", codeString, linePos));
 			//cout << "ERROR" << endl;
 			codeString.erase(0);
 		}
@@ -131,10 +134,11 @@ string symbolAnalysis(string symbolString) {
 		return "openBracToken";
 	}
 	else if (regex_match(symbolString, startComment)) {
+		isComment = true;
 		return "startComToken";
 	}
 	else if (regex_match(symbolString, endComment)) {
-		return "endComToken";
+		return "closeComToken";
 	}
 	else if (regex_match(symbolString, endProgram)) {
 		return "endProgram";
@@ -161,6 +165,7 @@ string symbolAnalysis(string symbolString) {
 		return "addToken";
 	}
 	else if (regex_match(symbolString, quotes)) {
+		inQuotes = true;
 		return "quoteToken";
 	}
 	else
@@ -179,7 +184,7 @@ vector<Token> Lexer::lex(string program, int lineNum) {
 	string codeString = "";
 	string symbolString = "";
 	regex symbolReg("[\\{\\$\\+\\}\\(\\)=!/\\*\"]");
-	regex doubleSymbolReg("[=!/]");
+	regex doubleSymbolReg("[=!/\\*]");
 	regex charReg("[a-z]");
 	regex spaceReg(" ");
 	regex digitReg("[0-9]");
@@ -188,8 +193,6 @@ vector<Token> Lexer::lex(string program, int lineNum) {
 	regex newLine("[\n]");
 
 	for (int i = 0; i < program.length(); i++) {
-
-		linePos++;
 
 		string single = program.substr(i, 1);
 		string iAmComment;
