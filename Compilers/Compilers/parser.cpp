@@ -14,6 +14,7 @@ struct Node {
     vector<Node*> children;
 };
 
+//Define functions
 Node* parseChar(vector<Token> lexerList); 
 Node* parseSpace(vector<Token> lexerList);
 Node* parseCharList(vector<Token> lexerList);
@@ -37,8 +38,6 @@ Node* parseIntExpr(vector<Token> lexerList);
 Node* parseStringExpr(vector<Token> lexerList);
 Node* parseProgram(vector<Token> lexerList);
 
-
-
 class Parser {
 
 public:
@@ -52,22 +51,26 @@ private:
 Parser::~Parser()
 = default;
 
+//Check if the token at the current position matches the expected token
 bool match(string expected, vector<Token> lexerList) {
 
     auto actual = lexerList.at(current).tokenType;
+
+    //If they match, move the current token
     if (actual == expected) {
         cout << "PARSER --> |VALID! Expected token " << expected << ". Received " << actual << " at position " << lexerList.at(current).linePosition << endl;
         current++;
         return true;
     }
+    //Otherwise return an error
     else {
         cout << "PARSER --> |ERROR! Expected token " << expected << ". Received " << actual << " at position " << lexerList.at(current).linePosition << endl;
-       // break;
     }
 
     return false;
 }
 
+//Print the CST with - to separate layers
 void printCST(Node* node, int indent = 0) {
     for (int i = 0; i < indent; i++) {
         cout << "-";
@@ -78,6 +81,10 @@ void printCST(Node* node, int indent = 0) {
         printCST(node->children[i], indent + 1);
     }
 }
+
+//Create functions to match the grammar for each type of rule. In each function, create a new
+    //node. If the conditions for said rule are met, return that node and add it to the
+    //tree that is being recursively created, otherwise return null.
 
 Node* parseChar(vector<Token> lexerList) {
     Node* Char = new Node();
@@ -428,10 +435,7 @@ Node* parseStatement(vector<Token> lexerList) {
             return statement;
         }
     }
-        return NULL;
-
-   
-
+    return NULL;
 }
 
 Node* parsePrintStatement(vector<Token> lexerList) {
@@ -540,9 +544,7 @@ Node* parseIntExpr(vector<Token> lexerList) {
         else
             if (match("digitToken", lexerList)) {
                 return intExpr;
-            
         }
-       
     }
 
     return NULL;
@@ -587,6 +589,8 @@ void Parser::parse(vector<Token> masterTokenStreamLexed) {
 
     vector<Token> lexerList;
 
+    //Since we are ignoring comments, create a new token stream with comment tokens removed
+        //so they are not added to the CST
     for (auto i = 0; i < masterTokenStreamLexed.size(); i++)
     {
         //auto x = masterTokenStreamLexed[i].tokenType;
@@ -594,11 +598,11 @@ void Parser::parse(vector<Token> masterTokenStreamLexed) {
             lexerList.push_back(masterTokenStreamLexed[i]);
     }
     
+    //If the program is valid, print the tree.
 
     Node* root = new Node();
     auto x = parseProgram(lexerList);
 
-    //printCST(root);
     if (x != NULL) {
         root->children.push_back(x);
         printCST(root);
