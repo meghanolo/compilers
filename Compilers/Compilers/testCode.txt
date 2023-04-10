@@ -1,3 +1,72 @@
+{a==b}$
+{{{{{{}}}}}}$
+{{{{{{}}} /* comments are ignored */ }}}}$
+{ /* comments are still ignored */ int @}$
+{
+  int a
+  a = a
+  string b
+  a=b
+}$
+/* Test case for IfStatement. */
+{
+    int a
+    a = 1
+    if(1 == 1){
+        print("nums")
+    }
+    if(a == a){
+        print("ids")
+    }
+    if("hey" == "hey"){
+        print("strings")
+    }
+    if(true == true){
+        print("booleans")
+    }
+} $
+/* Has unused and undeclared variables */
+{
+  int a
+  int b
+  a = 3
+  b = 4
+  {
+    string a
+    a = "hey"
+    print(a)
+    print(b)
+  }
+  print(b)
+  string s
+  {
+    boolean b
+    b = false
+  }
+  string r
+  r = "hey"
+  int d
+  print(d)
+  d = 3
+}$
+/* Test case for print statement */
+{
+    print("i love compilers")
+}$
+/* Test case for multiple programs */
+{
+    print("i love compilers")
+    int a
+    a = 2
+    string s
+    s = "ha"
+}$
+{
+    int b
+    b = 4
+    string s
+    s = "hey"
+}$
 /* Test case for IfStatement. Prints numsidsstringsbooleans */
 {
     int a

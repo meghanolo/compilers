@@ -55,12 +55,13 @@ Parser::~Parser()
 bool match(string expected, vector<Token> lexerList) {
 
     auto actual = lexerList.at(current).tokenType;
-    current++;
     if (actual == expected) {
+        cout << "PARSER --> |VALID! Expected token " << expected << ". Received " << actual << " at position " << lexerList.at(current).linePosition << endl;
+        current++;
         return true;
     }
     else {
-        cout << "ERROR! Expected token " << expected << ". Received " << actual << " at position " << lexerList.at(current).linePosition << endl;
+        cout << "PARSER --> |ERROR! Expected token " << expected << ". Received " << actual << " at position " << lexerList.at(current).linePosition << endl;
        // break;
     }
 
@@ -69,7 +70,7 @@ bool match(string expected, vector<Token> lexerList) {
 
 void printCST(Node* node, int indent = 0) {
     for (int i = 0; i < indent; i++) {
-        cout << "  ";
+        cout << "-";
     }
     cout << node->name << endl;
 
@@ -255,6 +256,20 @@ Node* parseExpr(vector<Token> lexerList) {
         return expression;
     }
     else if (token == "openParenToken") {
+        auto x = parseBoolExpr(lexerList);
+        if (x != NULL) {
+            expression->children.push_back(x);
+        }
+        return expression;
+    }
+    else if (token == "falseToken") {
+        auto x = parseBoolExpr(lexerList);
+        if (x != NULL) {
+            expression->children.push_back(x);
+        }
+        return expression;
+    }
+    else if (token == "trueToken") {
         auto x = parseBoolExpr(lexerList);
         if (x != NULL) {
             expression->children.push_back(x);
@@ -453,11 +468,11 @@ Node* parseStatementList(vector<Token> lexerList) {
         if (y != NULL) {
             statementList->children.push_back(y);
         }
-        //return statementList;
+        return statementList;
     }
 
 
-    return statementList;
+    return NULL;
 
 }
 
@@ -589,7 +604,7 @@ void Parser::parse(vector<Token> masterTokenStreamLexed) {
         printCST(root);
     }
     else
-        cout << "ERROR; No CST Created." << endl;
+        cout << "ERROR. No CST Created." << endl;
 
     cout << "\n\n\n" << endl;
    

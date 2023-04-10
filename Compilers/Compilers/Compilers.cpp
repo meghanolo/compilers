@@ -34,7 +34,7 @@ int main(int argc, char* argv[])
 		int programLines = 0;
 		while (!endProgram) {
 			while (getline(myfile, tp)) { //read data from file object and put it into string.
-				programLineStart = ++fileLine;
+				programLineStart = fileLine++;
 				program += tp;
 				programLines++;
 				if (regex_search(program, endProgramReg)) {
