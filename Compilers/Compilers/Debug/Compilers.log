@@ -1,6 +1,6 @@
 ﻿  Compilers.cpp
 C:\Users\meggi\compilers\Compilers\Compilers\lexer.cpp(197,20): warning C4018: '<': signed/unsigned mismatch
 C:\Users\meggi\compilers\Compilers\Compilers\lexer.cpp(202,22): warning C4018: '<': signed/unsigned mismatch
-C:\Users\meggi\compilers\Compilers\Compilers\parser.cpp(76,23): warning C4018: '<': signed/unsigned mismatch
-C:\Users\meggi\compilers\Compilers\Compilers\parser.cpp(575,24): warning C4018: '<': signed/unsigned mismatch
+C:\Users\meggi\compilers\Compilers\Compilers\parser.cpp(77,23): warning C4018: '<': signed/unsigned mismatch
+C:\Users\meggi\compilers\Compilers\Compilers\parser.cpp(590,24): warning C4018: '<': signed/unsigned mismatch
   Compilers.vcxproj -> C:\Users\meggi\compilers\Compilers\Debug\Compilers.exe
