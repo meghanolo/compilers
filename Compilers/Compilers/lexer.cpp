@@ -93,6 +93,7 @@ vector<Token> codeStringAnalysis(string codeString, int linePos) {
 		}
 		else if (regex_match(codeString.substr(0, 1), charReg)) {
 			dataSet.push_back(Token("charToken", codeString.substr(0, 1), (size+1)));
+			//cout << "lexer " << codeString.substr(0, 1) << endl;
 			codeString.erase(0, 1);
 		}
 		else if (regex_match(codeString.substr(0, 1), digitReg)) {
@@ -285,7 +286,7 @@ vector<Token> Lexer::lex(string program, int lineNum) {
 	cout << "------------------------------------------------------------------" << endl;
 
 	for (auto const& i : masterTokenStream) {
-		cout << "LEXER --> | " << i.tokenType << " [ " << i.value << " ] on line [" << lineNum << ":" << i.linePosition << "] " << endl;
+		//cout << "LEXER --> | " << i.tokenType << " [ " << i.value << " ] on line [" << lineNum << ":" << i.linePosition << "] " << endl;
 	}
 	if (errors == 0)
 		cout << "INFO - SUCCESS! Lexer completed with 0 errors." << endl;

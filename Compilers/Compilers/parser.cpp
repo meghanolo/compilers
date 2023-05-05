@@ -4,15 +4,12 @@
 #include <string>
 #include <list>
 #include <vector>
+#include "semantics.cpp"
 
 using namespace std;
 
 int current = 0;
 
-struct Node {
-    string name;
-    vector<Node*> children;
-};
 
 //Define functions
 Node* parseChar(vector<Token> lexerList); 
@@ -42,7 +39,7 @@ class Parser {
 
 public:
 	~Parser();                                                           
-	void parse(vector<Token>);
+	Node* parse(vector<Token>);
 
 private:
 
@@ -58,13 +55,13 @@ bool match(string expected, vector<Token> lexerList) {
 
     //If they match, move the current token
     if (actual == expected) {
-        cout << "PARSER --> |VALID! Expected token " << expected << ". Received " << actual << " at position " << lexerList.at(current).linePosition << endl;
+        //cout << "PARSER --> |VALID! Expected token " << expected << ". Received " << actual << " at position " << lexerList.at(current).linePosition << endl;
         current++;
         return true;
     }
     //Otherwise return an error
     else {
-        cout << "PARSER --> |ERROR! Expected token " << expected << ". Received " << actual << " at position " << lexerList.at(current).linePosition << endl;
+        //cout << "PARSER --> |ERROR! Expected token " << expected << ". Received " << actual << " at position " << lexerList.at(current).linePosition << endl;
     }
 
     return false;
@@ -90,8 +87,13 @@ Node* parseChar(vector<Token> lexerList) {
     Node* Char = new Node();
     Char->name = "Char";
 
-    if (match("charToken", lexerList)) 
+    auto charVal = lexerList.at(current).value;
+    //cout << charVal << endl;
+
+    if (match("charToken", lexerList)) {
+        Char->value = charVal;
         return Char;
+    }
 
     return NULL;
 }
@@ -176,11 +178,14 @@ Node* parseBoolOp(vector<Token> lexerList) {
     string token = lexerList.at(current).tokenType;
 
     if (token == "boolEqualToken") {
-        if (match("boolEqualToken", lexerList))
+        if (match("boolEqualToken", lexerList)) {
+            boolOp->value = "==";
             return boolOp;
+        }
     }
     else if (token == "boolNotToken") {
         if (match("boolNotToken", lexerList))
+            boolOp->value = "!=";
             return boolOp;
     }
 
@@ -244,6 +249,7 @@ Node* parseExpr(vector<Token> lexerList) {
     if (token == "charToken") {
         auto x = parseId(lexerList);
         if (x != NULL) {
+            expression->value = "charToken";
             expression->children.push_back(x);
         }
         return expression;
@@ -251,6 +257,7 @@ Node* parseExpr(vector<Token> lexerList) {
     else if (token == "digitToken") {
         auto x = parseIntExpr(lexerList);
         if (x != NULL) {
+            expression->value = "digitToken";
             expression->children.push_back(x);
         }
         return expression;
@@ -258,6 +265,7 @@ Node* parseExpr(vector<Token> lexerList) {
     else if (token == "quoteToken") {
         auto x = parseStringExpr(lexerList);
         if (x != NULL) {
+            expression->value = "quoteToken";
             expression->children.push_back(x);
         }
         return expression;
@@ -265,6 +273,7 @@ Node* parseExpr(vector<Token> lexerList) {
     else if (token == "openParenToken") {
         auto x = parseBoolExpr(lexerList);
         if (x != NULL) {
+            expression->value = "openParenToken";
             expression->children.push_back(x);
         }
         return expression;
@@ -273,12 +282,14 @@ Node* parseExpr(vector<Token> lexerList) {
         auto x = parseBoolExpr(lexerList);
         if (x != NULL) {
             expression->children.push_back(x);
+            expression->value = "falseToken";
         }
         return expression;
     }
     else if (token == "trueToken") {
         auto x = parseBoolExpr(lexerList);
         if (x != NULL) {
+            expression->value = "trueToken";
             expression->children.push_back(x);
         }
         return expression;
@@ -294,8 +305,11 @@ Node* parseId(vector<Token> lexerList) {
     Node* id = new Node();
     id->name = "id";
 
+    string idValue = lexerList.at(current).value;
+
     auto x = parseChar(lexerList);
     if (x != NULL) {
+        id->value = idValue;
         id->children.push_back(x);
 
         return id;
@@ -401,6 +415,7 @@ Node* parseStatement(vector<Token> lexerList) {
     else if (token == "charToken") {
         auto x = parseAssignmentStatement(lexerList);
         if (x != NULL) {
+
             statement->children.push_back(x);
 
             return statement;
@@ -583,9 +598,11 @@ Node* parseProgram(vector<Token> lexerList) {
     return NULL;
 }
 
-void Parser::parse(vector<Token> masterTokenStreamLexed) {
+
+Node* Parser::parse(vector<Token> masterTokenStreamLexed) {
     
     current = 0;
+    Semantics CSTparse;
 
     vector<Token> lexerList;
 
@@ -605,11 +622,13 @@ void Parser::parse(vector<Token> masterTokenStreamLexed) {
 
     if (x != NULL) {
         root->children.push_back(x);
-        printCST(root);
+        //printCST(root);
+        CSTparse.working(root);
     }
     else
         cout << "ERROR. No CST Created." << endl;
 
     cout << "\n\n\n" << endl;
    
+    return root;
 }

@@ -8,9 +8,9 @@
 #include <list>
 #include "lexer.cpp"
 #include "parser.cpp"
-//#include "semantics.cpp"
 
 using namespace std;
+
 
 int main(int argc, char* argv[])
 {
@@ -27,6 +27,7 @@ int main(int argc, char* argv[])
 	if (myfile.is_open()) { //checking whether the file is open
 		Lexer myLex; //  Stack allocation. To allocate on the heap use "new Lexer()".
 		Parser myParse;
+		
 		string tp;
 		int programLineStart = 0;
 		int fileLine = 0;
@@ -46,7 +47,8 @@ int main(int argc, char* argv[])
 					/*for (auto const& i : lexResult) {
 						cout << i.value << endl;
 					}*/
-					myParse.parse(lexResult);
+					auto CST = myParse.parse(lexResult);
+					//cout << CST << endl;
 					program = "";
 				}
 			}
