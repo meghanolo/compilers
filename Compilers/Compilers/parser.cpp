@@ -12,7 +12,7 @@ int current = 0;
 
 
 //Define functions
-Node* parseChar(vector<Token> lexerList); 
+Node* parseChar(vector<Token> lexerList);
 Node* parseSpace(vector<Token> lexerList);
 Node* parseCharList(vector<Token> lexerList);
 Node* parseType(vector<Token> lexerList);
@@ -38,8 +38,8 @@ Node* parseProgram(vector<Token> lexerList);
 class Parser {
 
 public:
-	~Parser();                                                           
-	Node* parse(vector<Token>);
+    ~Parser();
+    Node* parse(vector<Token>);
 
 private:
 
@@ -68,7 +68,7 @@ bool match(string expected, vector<Token> lexerList) {
 }
 
 //Print the CST with - to separate layers
-void printCST(Node* node, int indent = 0) {
+void printCST(Node * node, int indent = 0) {
     for (int i = 0; i < indent; i++) {
         cout << "-";
     }
@@ -116,15 +116,15 @@ Node* parseCharList(vector<Token> lexerList) {
     string token = lexerList.at(current).tokenType;
 
     if (token == "charToken") {
-            auto x = parseChar(lexerList);
-            if (x != NULL) {
-                charList->children.push_back(x);
-            }
-            auto y = parseCharList(lexerList);
-            if (y != NULL) {
-                charList->children.push_back(y);
-            }
+        auto x = parseChar(lexerList);
+        if (x != NULL) {
+            charList->children.push_back(x);
         }
+        auto y = parseCharList(lexerList);
+        if (y != NULL) {
+            charList->children.push_back(y);
+        }
+    }
     else if (token == "spaceToken") {
         auto x = parseSpace(lexerList);
         if (x != NULL) {
@@ -186,7 +186,7 @@ Node* parseBoolOp(vector<Token> lexerList) {
     else if (token == "boolNotToken") {
         if (match("boolNotToken", lexerList))
             boolOp->value = "!=";
-            return boolOp;
+        return boolOp;
     }
 
     return NULL;
@@ -253,7 +253,7 @@ Node* parseExpr(vector<Token> lexerList) {
             expression->children.push_back(x);
         }
         return expression;
-    }       
+    }
     else if (token == "digitToken") {
         auto x = parseIntExpr(lexerList);
         if (x != NULL) {
@@ -294,11 +294,11 @@ Node* parseExpr(vector<Token> lexerList) {
         }
         return expression;
     }
-       
-       
+
+
 
     return NULL;
-   
+
 }
 
 Node* parseId(vector<Token> lexerList) {
@@ -326,13 +326,13 @@ Node* parseAssignmentStatement(vector<Token> lexerList) {
     if ((x != NULL) && (match("assignmentToken", lexerList))) {
         assignmentStatement->children.push_back(x);
         auto y = parseExpr(lexerList);
-            if (y != NULL) {
-                assignmentStatement->children.push_back(y);
+        if (y != NULL) {
+            assignmentStatement->children.push_back(y);
 
-                return assignmentStatement;
-            }
+            return assignmentStatement;
+        }
     }
-    
+
 
     return NULL;
 }
@@ -366,10 +366,10 @@ Node* parseBoolExpr(vector<Token> lexerList) {
                 boolExpr->children.push_back(z);
 
                 return boolExpr;
-                   
+
             }
         }
-      
+
     }
 
     return NULL;
@@ -393,7 +393,7 @@ Node* parseIfStatement(vector<Token> lexerList) {
             return ifStatement;
         }
     }
-   
+
     return NULL;
 }
 
@@ -427,7 +427,7 @@ Node* parseStatement(vector<Token> lexerList) {
             statement->children.push_back(x);
             return statement;
         }
-        
+
     }
     else if (token == "whileToken") {
         auto x = parseWhileStatement(lexerList);
@@ -478,7 +478,7 @@ Node* parseStatementList(vector<Token> lexerList) {
     string token = lexerList.at(current).tokenType;
 
     if ((token == "printToken") || (token == "charToken") || (token == "intToken") || (token == "boolToken") || (token == "stringToken") || (token == "whileToken")
-        || (token == "ifToken") || (token == "openBracToken") ) {
+        || (token == "ifToken") || (token == "openBracToken")) {
         auto x = parseStatement(lexerList);
         if (x != NULL) {
             statementList->children.push_back(x);
@@ -501,7 +501,7 @@ Node* parseVarDecl(vector<Token> lexerList) {
     varDecl->name = "varDecl";
 
     auto x = parseType(lexerList);
-    if (x != NULL) 
+    if (x != NULL)
         varDecl->children.push_back(x);
     auto y = parseId(lexerList);
     if (y != NULL) {
@@ -559,7 +559,7 @@ Node* parseIntExpr(vector<Token> lexerList) {
         else
             if (match("digitToken", lexerList)) {
                 return intExpr;
-        }
+            }
     }
 
     return NULL;
@@ -600,7 +600,7 @@ Node* parseProgram(vector<Token> lexerList) {
 
 
 Node* Parser::parse(vector<Token> masterTokenStreamLexed) {
-    
+
     current = 0;
     Semantics CSTparse;
 
@@ -614,7 +614,7 @@ Node* Parser::parse(vector<Token> masterTokenStreamLexed) {
         if ((masterTokenStreamLexed[i].tokenType != "startComToken") && (masterTokenStreamLexed[i].tokenType != "closeComToken"))
             lexerList.push_back(masterTokenStreamLexed[i]);
     }
-    
+
     //If the program is valid, print the tree.
 
     Node* root = new Node();
@@ -622,13 +622,13 @@ Node* Parser::parse(vector<Token> masterTokenStreamLexed) {
 
     if (x != NULL) {
         root->children.push_back(x);
-        //printCST(root);
+        printCST(root);
         CSTparse.working(root);
     }
     else
         cout << "ERROR. No CST Created." << endl;
 
     cout << "\n\n\n" << endl;
-   
+
     return root;
 }

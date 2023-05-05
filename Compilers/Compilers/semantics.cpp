@@ -13,7 +13,6 @@ using namespace std;
 int pos = 0;
 int semanticErrors = 0;
 int currentScope;
-bool continueParsing = true;
 
 struct Node {
     string name;
@@ -35,25 +34,11 @@ public:
     string value;
     string type;
     vector<ScopeNode*> children;
- /*   ScopeNode(int a, string x, string y, vector<ScopeNode*> z) {
-        scope = a;
-        value = x;
-        type = y;
-        children = z;
-    }
-    ScopeNode(int a, string x, string y) {
-        scope = a;
-        value = x;
-        type = y;
-        children = z;
-    }*/
 };
 
-ScopeNode* scopeTree;
 ScopeNode* symbolTree;
 ASTNode* root = new ASTNode;
 
-// Recursive descent parser class
 class Semantics {
 public:
     ~Semantics();
@@ -66,49 +51,32 @@ private:
 Semantics::~Semantics()
 = default;
 
-/*void addId(string id, string type, int linePos, int lineNum) {
-   
-   symbolTree->children.push_back(ScopeNode(currentScope, id, type));
-}
-
-void enterBlock() {
-    currentScope += 1;
-}
-
-void leaveBlock() {
-    currentScope -= 1;
-}
-
 bool checkTable(string id) {
-    for (int i = 0; i < this->symbols.size(); i++) {
-        if (id == this->symbols[i].id) {
+    for (int i = 0; i < symbolTree->children.size(); i++) {
+        if (id == symbolTree->children[i]->value) {
             return true;
         }
     }
     return false;
 }
 
-bool scopeCheck(int scope, std::string id) {
-    for (int i = 0; i < this->symbols.size(); i++) {
-        if (scope == this->symbols[i].scope && id == this->symbols[i].id) {
-            return true;
-        }
-    }
-    return false;
+void addToAST(ASTNode* AST) {
+    root->children.push_back(AST);
 }
-};*/
-
 
 void printAST(ASTNode* node, int indent = 0) {
-    for (int i = 0; i < indent; i++) {
-        cout << "-";
-    }
-    cout << node->type << endl;
-    if (node->value != "") {
+    
+    if ((node->type == "String") || (node->type == "boolVal")) {
         for (int i = 0; i < indent; i++) {
             cout << "-";
         }
         cout << node->value << endl;
+    }
+    else {
+        for (int i = 0; i < indent; i++) {
+            cout << "-";
+        }
+        cout << node->type << endl;
     }
     
     for (int i = 0; i < node->children.size(); i++) {
@@ -117,33 +85,26 @@ void printAST(ASTNode* node, int indent = 0) {
 }
 
 ASTNode* buildAST(Node* node) {
-    
-    string current = node->name;
-    if (current == "Program") {
-       root->type = "program";
-       root->children.push_back(buildAST(node->children[0]));
-       continueParsing = false;
-    }
-    else if (current == "Block") {
+    //ASTNode* root = new ASTNode;
+    string currentName = node->name;
+    if (currentName == "Block") {
        ASTNode* blockNode = new ASTNode;
        blockNode->type = "block";
 
        ScopeNode* blockScope = new ScopeNode;
        blockScope->scope = currentScope;
-       scopeTree->children.push_back(blockScope);
+       //scopeTree->children.push_back(blockScope);
 
        currentScope++;
+       root->children.push_back(blockNode);
        
        for (int i = 0; i < node->children.size(); i++) {
-           auto fly = buildAST(node->children[i]);
-           blockNode->children.push_back(fly);
+           cout << node->children[i]->name << endl;
+          buildAST(node->children[i]);
        }
-       root->children.push_back(blockNode);
-
-     
-
+       
         }
-        else if (current == "varDecl") {
+        else if (currentName == "varDecl") {
             //cout << "vardecl" << endl;
             ASTNode* varDecl = new ASTNode;
             varDecl->type = "varDecl";
@@ -165,31 +126,30 @@ ASTNode* buildAST(Node* node) {
             root->children.push_back(varDecl);
 
 
-            /*if () {
-                //this->scopeTree.curr.value.buckets[id.value] = new JuiceC::ScopeVariable(id.value, token);
-                scopeNode* symbol = new ScopeNode;
+            if (checkTable(varId) == false) {
+                ScopeNode* symbol = new ScopeNode;
                 symbol->scope = currentScope;
                 symbol->type = varType;
-                symbol->value = idNode;
-                //this->symbols.push_back(symbol);
+                symbol->value = varId;
+                symbolTree->children.push_back(symbol);
             }
             else {
-                errors++;
-                cout << "DEBUG - SEMANTIC - ERROR: Duplicate Variable"" << endl;
-            }*/
+                semanticErrors++;
+                cout << "DEBUG - SEMANTIC - ERROR: Duplicate Variable" << endl;
+            }
 
         }
-        else if (current == "printStatement") {
-             //cout << "hitprint" << endl;
-
+        else if (currentName == "printStatement") {
+            
             ASTNode* printStatement = new ASTNode;
             printStatement->type = "printStatement";
 
-            printStatement->children.push_back(buildAST(node->children[0]));
             root->children.push_back(printStatement);
+
+            buildAST(node->children[0]);
         }
-        else if (current == "assignmentStatement") {
-            //cout << "hit assign" << endl;
+        else if (currentName == "assignmentStatement") {
+            
             ASTNode* assignmentStatement = new ASTNode;
             assignmentStatement->type = "assignmentStatement";
 
@@ -212,25 +172,27 @@ ASTNode* buildAST(Node* node) {
 
 
         }
-        else if (current == "whileStatement") {
+        else if (currentName == "whileStatement") {
             //cout << "hit while" << endl;
             ASTNode* whileStatement = new ASTNode;
             whileStatement->type = "whileStatement";
-            
-            whileStatement->children.push_back(buildAST(node->children[0]));
-            whileStatement->children.push_back(buildAST(node->children[1]));
+
             root->children.push_back(whileStatement);
+            
+            buildAST(node->children[0]);
+            buildAST(node->children[1]);
+            
         }
-        else if (current == "ifStatement") {
+        else if (currentName == "ifStatement") {
             //cout << "hit if" << endl;
             ASTNode* ifStatement = new ASTNode;
             ifStatement->type = "ifStatement";
-            
-            ifStatement->children.push_back(buildAST(node->children[0]));
-            ifStatement->children.push_back(buildAST(node->children[1]));
             root->children.push_back(ifStatement);
+            buildAST(node->children[0]);
+            buildAST(node->children[1]);
+           
         }
-        else if (current == "id") {
+        else if (currentName == "id") {
             //cout << "hit id" << endl;
 
             ASTNode* idNode = new ASTNode;
@@ -253,20 +215,20 @@ ASTNode* buildAST(Node* node) {
             
 
         }
-        else if (current == "intExpr") {
+        else if (currentName == "intExpr") {
             //cout << "hit int" << endl;
             // Check if it is not a digit
             if (node->children.size() > 1) {
                 ASTNode* intExpr = new ASTNode;
                 intExpr->type = "intExpr";
                 //intExpr->value = node->children[0]->value;
-                root->children.push_back(intExpr);
+               root->children.push_back(intExpr);
               
 
                 auto exprType = node->children[1]->value;
        
                 if (exprType != "digitToken") {
-                    errors++;
+                    semanticErrors++;
                     cout << "DEBUG - SEMANTIC - ERROR: Incorrect Int Expression" << endl;
                 }
        
@@ -279,7 +241,7 @@ ASTNode* buildAST(Node* node) {
 
 
         }
-        else if (current == "boolExpr") {
+        else if (currentName == "boolExpr") {
 
         //cout << "boolExpr" << endl;
 
@@ -290,12 +252,14 @@ ASTNode* buildAST(Node* node) {
             if (node->children.size() > 1) {
                 if (node->children[1]->value == "==") {
                     boolVal->value = "Equals";
-                    root->children.push_back(boolVal);
+                   
                 }
                 else {
                     boolVal->value = "notEquals";
-                    root->children.push_back(boolVal);
+                    
+
                 }
+                root->children.push_back(boolVal);
 
                 string leftExpr = node->children[0]->value;
                 string rightExpr = node->children[2]->value;
@@ -305,8 +269,8 @@ ASTNode* buildAST(Node* node) {
                     cout << "SEMANTIC --> | ERROR: Incorrect Type Comparison" << endl;
                 }
                 else {
-                    root->children.push_back(buildAST(node->children[0]));
-                    root->children.push_back(buildAST(node->children[2]));
+                    //addToAST(buildAST(node->children[0]));
+                    //addToAST(buildAST(node->children[2]));
                 }
 
             }
@@ -316,7 +280,7 @@ ASTNode* buildAST(Node* node) {
             }
 
         }
-        else if (current == "stringExpr") {
+        else if (currentName == "stringExpr") {
 
         //cout << "hitString" << endl;
            
@@ -346,12 +310,9 @@ ASTNode* buildAST(Node* node) {
 
         }
         else {
-        if (continueParsing) {
-            for (int i = 0; i < node->children.size(); i++) {
+           for (int i = 0; i < node->children.size(); i++) {
                 buildAST(node->children[i]);
             }
-        }
-
         }
     
     
@@ -362,15 +323,16 @@ ASTNode* Semantics::working(Node* node) {
 
     ASTNode* AST = new ASTNode;
 
-    scopeTree = new ScopeNode();
+    symbolTree = new ScopeNode();
+    root = new ASTNode;
 
     vector<Token> lexerList;
 
     currentScope = 0;
 
-    AST = (buildAST(node));
+    buildAST(node);
 
-    printAST(AST);
+    printAST(root);
     
     cout << "\n\n\n" << endl;
 
