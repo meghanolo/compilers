@@ -4,6 +4,6 @@ Completed/Fixed Lexer branch: Lexer
 
 Completed/Fixed Parser branch: Parser
 
-Semantic Analysis: SemanticAnalysis
+Semantic Analysis: SemanticAnalysis still working on Assignment
 
-Code Generation: Not working on main
+Code Generation: in library...working 
