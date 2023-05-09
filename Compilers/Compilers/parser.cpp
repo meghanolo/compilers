@@ -55,13 +55,13 @@ bool match(string expected, vector<Token> lexerList) {
 
     //If they match, move the current token
     if (actual == expected) {
-        //cout << "PARSER --> |VALID! Expected token " << expected << ". Received " << actual << " at position " << lexerList.at(current).linePosition << endl;
+        cout << "PARSER --> |VALID! Expected token " << expected << ". Received " << actual << " at position " << lexerList.at(current).lineNum << ":" << lexerList.at(current).linePosition << endl;
         current++;
         return true;
     }
     //Otherwise return an error
     else {
-        //cout << "PARSER --> |ERROR! Expected token " << expected << ". Received " << actual << " at position " << lexerList.at(current).linePosition << endl;
+        cout << "PARSER --> |ERROR! Expected token " << expected << ". Received " << actual << " at position " << lexerList.at(current).lineNum << ":" << lexerList.at(current).linePosition << endl;
     }
 
     return false;
@@ -146,16 +146,22 @@ Node* parseType(vector<Token> lexerList) {
     string token = lexerList.at(current).tokenType;
 
     if (token == "intToken") {
-        if (match("intToken", lexerList))
+        if (match("intToken", lexerList)) {
+            type->value = "int";
             return type;
+        }
     }
     else if (token == "boolToken") {
-        if (match("boolToken", lexerList))
+        if (match("boolToken", lexerList)) {
+            type->value = "bool";
             return type;
+        }
     }
     else if (token == "stringToken") {
-        if (match("stringToken", lexerList))
+        if (match("stringToken", lexerList)) {
+            type->value = "string";
             return type;
+        }
     }
 
     return NULL;

@@ -1,10 +1,12 @@
 ﻿  Compilers.cpp
-C:\Users\meggi\compilers\Compilers\Compilers\lexer.cpp(199,20): warning C4018: '<': signed/unsigned mismatch
-C:\Users\meggi\compilers\Compilers\Compilers\lexer.cpp(207,22): warning C4018: '<': signed/unsigned mismatch
-C:\Users\meggi\compilers\Compilers\Compilers\semantics.cpp(55,23): warning C4018: '<': signed/unsigned mismatch
-C:\Users\meggi\compilers\Compilers\Compilers\semantics.cpp(82,23): warning C4018: '<': signed/unsigned mismatch
-C:\Users\meggi\compilers\Compilers\Compilers\semantics.cpp(101,26): warning C4018: '<': signed/unsigned mismatch
-C:\Users\meggi\compilers\Compilers\Compilers\semantics.cpp(313,30): warning C4018: '<': signed/unsigned mismatch
+C:\Users\meggi\compilers\Compilers\Compilers\lexer.cpp(201,20): warning C4018: '<': signed/unsigned mismatch
+C:\Users\meggi\compilers\Compilers\Compilers\lexer.cpp(209,22): warning C4018: '<': signed/unsigned mismatch
+C:\Users\meggi\compilers\Compilers\Compilers\semantics.cpp(57,23): warning C4018: '<': signed/unsigned mismatch
+C:\Users\meggi\compilers\Compilers\Compilers\semantics.cpp(68,23): warning C4018: '<': signed/unsigned mismatch
+C:\Users\meggi\compilers\Compilers\Compilers\semantics.cpp(78,23): warning C4018: '<': signed/unsigned mismatch
+C:\Users\meggi\compilers\Compilers\Compilers\semantics.cpp(106,23): warning C4018: '<': signed/unsigned mismatch
+C:\Users\meggi\compilers\Compilers\Compilers\semantics.cpp(125,26): warning C4018: '<': signed/unsigned mismatch
+C:\Users\meggi\compilers\Compilers\Compilers\semantics.cpp(339,30): warning C4018: '<': signed/unsigned mismatch
 C:\Users\meggi\compilers\Compilers\Compilers\parser.cpp(77,23): warning C4018: '<': signed/unsigned mismatch
-C:\Users\meggi\compilers\Compilers\Compilers\parser.cpp(611,24): warning C4018: '<': signed/unsigned mismatch
+C:\Users\meggi\compilers\Compilers\Compilers\parser.cpp(617,24): warning C4018: '<': signed/unsigned mismatch
   Compilers.vcxproj -> C:\Users\meggi\compilers\Compilers\Debug\Compilers.exe

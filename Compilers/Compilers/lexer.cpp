@@ -16,10 +16,12 @@ public:
 	string tokenType;
 	string value;
 	int linePosition;
-	Token(string x, string y, int z) {
+	int lineNum;
+	Token(string x, string y, int z, int a) {
 		tokenType = x;
 		value = y;
 		linePosition = z;
+		lineNum = a;
 	}
 	Token(string x) {
 		tokenType = x;
@@ -45,7 +47,7 @@ Lexer::~Lexer()
 	//If the program contains a character not found in the grammar, this will return 
 	//an error, otherwise, it will return a vector of Tokens to be added to the
 	//larger token stream.
-vector<Token> codeStringAnalysis(string codeString, int linePos) {
+vector<Token> codeStringAnalysis(string codeString, int linePos, int lineNum) {
 
 	vector<Token> dataSet;
 
@@ -60,48 +62,48 @@ vector<Token> codeStringAnalysis(string codeString, int linePos) {
 	while (codeString.length() > 0) {
 		if (codeString.substr(0, 7) == "boolean") {
 			codeString.erase(0, 7);
-			dataSet.push_back(Token("boolToken", "boolean", (size+7)));
+			dataSet.push_back(Token("boolToken", "boolean", (size+7), lineNum));
 		}
 		else if (codeString.substr(0, 6) == "string") {
 			codeString.erase(0, 6);
-			dataSet.push_back(Token("stringToken", "string", (size+6)));
+			dataSet.push_back(Token("stringToken", "string", (size+6), lineNum));
 		}
 		else if (codeString.substr(0, 5) == "print") {
 			codeString.erase(0, 5);
-			dataSet.push_back(Token("printToken", "print", (size+5)));
+			dataSet.push_back(Token("printToken", "print", (size+5), lineNum));
 		}
 		else if (codeString.substr(0, 5) == "while") {
 			//cout << "whileToken" << endl;
 			codeString.erase(0, 5);
-			dataSet.push_back(Token("whileToken", "while", (size+5)));
+			dataSet.push_back(Token("whileToken", "while", (size+5), lineNum));
 		}
 		else if (codeString.substr(0, 2) == "if") {
 			codeString.erase(0, 2);
-			dataSet.push_back(Token("ifToken", "if", (size+2)));
+			dataSet.push_back(Token("ifToken", "if", (size+2), lineNum));
 		}
 		else if (codeString.substr(0, 5) == "false") {
 			codeString.erase(0, 5);
-			dataSet.push_back(Token("falseToken", "false", (size+5)));
+			dataSet.push_back(Token("falseToken", "false", (size+5), lineNum));
 		}
 		else if (codeString.substr(0, 4) == "true") {
 			codeString.erase(0, 4);
-			dataSet.push_back(Token("trueToken", "true", (size+4)));
+			dataSet.push_back(Token("trueToken", "true", (size+4), lineNum));
 		}
 		else if (codeString.substr(0, 3) == "int") {
 			codeString.erase(0, 3);
-			dataSet.push_back(Token("intToken", "int", (size+3)));
+			dataSet.push_back(Token("intToken", "int", (size+3), lineNum));
 		}
 		else if (regex_match(codeString.substr(0, 1), charReg)) {
-			dataSet.push_back(Token("charToken", codeString.substr(0, 1), (size+1)));
+			dataSet.push_back(Token("charToken", codeString.substr(0, 1), (size+1), lineNum));
 			//cout << "lexer " << codeString.substr(0, 1) << endl;
 			codeString.erase(0, 1);
 		}
 		else if (regex_match(codeString.substr(0, 1), digitReg)) {
-			dataSet.push_back(Token("digitToken", codeString.substr(0, 1), (size+1)));
+			dataSet.push_back(Token("digitToken", codeString.substr(0, 1), (size+1), lineNum));
 			codeString.erase(0, 1);
 		}
 		else {
-			dataSet.push_back(Token("ERROR", codeString, size));
+			dataSet.push_back(Token("ERROR", codeString, size, lineNum));
 			errors++;
 			codeString.erase(0);
 		}
@@ -207,7 +209,7 @@ vector<Token> Lexer::lex(string program, int lineNum) {
 			for (int m = i; m < program.length(); m++) {
 				iAmComment = program.substr(m, 2);
 				if (regex_search(iAmComment, closeComment)) {
-					masterTokenStream.push_back(Token("closeComToken", "*/", m));
+					masterTokenStream.push_back(Token("closeComToken", "*/", m, lineNum));
 					isComment = false;
 					i = ++m;
 					break;
@@ -219,17 +221,17 @@ vector<Token> Lexer::lex(string program, int lineNum) {
 			//quotes are found again.
 		else if (inQuotes == true) {
 			if (regex_search(single, quoteReg)) {
-				masterTokenStream.push_back(Token("quoteToken", "\"", i));
+				masterTokenStream.push_back(Token("quoteToken", "\"", i, lineNum));
 				inQuotes = false;
 			}
 			else if (regex_search(single, charReg)) {
-				masterTokenStream.push_back(Token("charToken", single, i));
+				masterTokenStream.push_back(Token("charToken", single, i, lineNum));
 			}
 			else if (regex_search(single, spaceReg)) {
-				masterTokenStream.push_back(Token("spaceToken", " ", i));
+				masterTokenStream.push_back(Token("spaceToken", " ", i, lineNum));
 			}
 			else {
-				masterTokenStream.push_back(Token("ERROR", single, i));
+				masterTokenStream.push_back(Token("ERROR", single, i, lineNum));
 				errors++;
 			}
 		}
@@ -240,7 +242,7 @@ vector<Token> Lexer::lex(string program, int lineNum) {
 		else if (regex_search(single, symbolReg)) {
 			symbolString += single;
 			if (codeString != "") {
-				temp = codeStringAnalysis(codeString, i);
+				temp = codeStringAnalysis(codeString, i, lineNum);
 				for (const Token token : temp) {
 					masterTokenStream.push_back(token);
 				}
@@ -251,20 +253,20 @@ vector<Token> Lexer::lex(string program, int lineNum) {
 				if (regex_search(program.substr(i + 1, 1), symbolReg)) {
 					symbolString += program.substr(i + 1, 1);
 					symbol = symbolAnalysis(symbolString);
-					masterTokenStream.push_back(Token(symbol, symbolString, i));
+					masterTokenStream.push_back(Token(symbol, symbolString, i, lineNum));
 					symbolString = "";
 					i++;
 				}
 				else {
 					symbol = symbolAnalysis(symbolString);
-					masterTokenStream.push_back(Token(symbol, symbolString, i));
+					masterTokenStream.push_back(Token(symbol, symbolString, i, lineNum));
 					symbolString = "";
 				}
 			}
 			//otherwise, create a symbol token using symbolAnalysis.
 			else {
 					symbol = symbolAnalysis(symbolString);
-					masterTokenStream.push_back(Token(symbol, symbolString, i));
+					masterTokenStream.push_back(Token(symbol, symbolString, i, lineNum));
 					symbolString = "";
 			}
 
@@ -286,7 +288,7 @@ vector<Token> Lexer::lex(string program, int lineNum) {
 	cout << "------------------------------------------------------------------" << endl;
 
 	for (auto const& i : masterTokenStream) {
-		//cout << "LEXER --> | " << i.tokenType << " [ " << i.value << " ] on line [" << lineNum << ":" << i.linePosition << "] " << endl;
+		cout << "LEXER --> | " << i.tokenType << " [ " << i.value << " ] on line [" << lineNum << ":" << i.linePosition << "] " << endl;
 	}
 	if (errors == 0)
 		cout << "INFO - SUCCESS! Lexer completed with 0 errors." << endl;
