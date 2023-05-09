@@ -5,6 +5,7 @@
 #include <list>
 #include <vector>
 #include <memory>
+//#include "codegeneration.cpp"
 
 using namespace std;
 
@@ -14,6 +15,7 @@ int pos = 0;
 int semanticErrors = 0;
 int currentScope;
 
+//Node struct
 struct Node {
     string name;
     string value;
@@ -28,6 +30,7 @@ public:
     vector<ASTNode*> children;
 };
 
+//Scope Tree Struct
 struct ScopeNode {
 public:
     int scope;
@@ -37,9 +40,9 @@ public:
     vector<ScopeNode*> children;
 };
 
+//Global vars
 ScopeNode* symbolTree;
 ASTNode* root = new ASTNode;
-
 vector<string> errorsList;
 
 class Semantics {
@@ -54,6 +57,7 @@ private:
 Semantics::~Semantics()
 = default;
 
+//Helper function to check if an id is in scope
 bool checkTableScope(string id, int IDScope) {
     for (int i = 0; i < symbolTree->children.size(); i++) {
         if (IDScope == symbolTree->children[i]->scope) {
@@ -65,6 +69,7 @@ bool checkTableScope(string id, int IDScope) {
     return false;
 }
 
+//Helper function to check if an id is in the table
 bool checkTable(string id) {
     for (int i = 0; i < symbolTree->children.size(); i++) {
             if (id == symbolTree->children[i]->value) {
@@ -74,7 +79,18 @@ bool checkTable(string id) {
     return false;
 }
 
+//Helper function to get the type of an id in scope
+auto getType(string id, int scope) {
+    for (int i = 0; i < symbolTree->children.size(); i++) {
+        if (id == symbolTree->children[i]->value) {
+            if (scope == symbolTree->children[i]->scope) {
+                return symbolTree->children[i]->type;
+            }
+        }
+    }
+}
 
+//Helper function to check if an id is in scope and matches type
 bool checkTableType(string id, int IDScope, string type) {
     for (int i = 0; i < symbolTree->children.size(); i++) {
         if (IDScope == symbolTree->children[i]->scope) {
@@ -88,7 +104,7 @@ bool checkTableType(string id, int IDScope, string type) {
     return false;
 }
 
-
+//Print AST be recursively calling to either the node's value or type
 void printAST(ASTNode* node, int indent = 0) {
     
     if ((node->type == "String") || (node->type == "boolVal")) {
@@ -109,10 +125,16 @@ void printAST(ASTNode* node, int indent = 0) {
     }
 }
 
+//Build the AST by recursively iterating over the CST node
 ASTNode* buildAST(Node* node) {
     
     string currentName = node->name;
+    
     if (currentName == "Block") {
+        //If it's a block, add a node
+            //increment the scope
+            //recursively build on each child
+            //decrease the scope
        ASTNode* blockNode = new ASTNode;
        blockNode->type = "block";
 
@@ -129,6 +151,8 @@ ASTNode* buildAST(Node* node) {
        currentScope--;
     }
     else if (currentName == "varDecl") {
+        //create a vardecl node with its id and type
+        
             
             ASTNode* varDecl = new ASTNode;
             varDecl->type = "varDecl";
@@ -144,19 +168,22 @@ ASTNode* buildAST(Node* node) {
             string varId = node->children[1]->name;
             string varIdVal = node->children[1]->value;
            
+        
             ASTNode* idNode = new ASTNode;
             idNode->type = varIdVal;
 
             varDecl->children.push_back(idNode);
             root->children.push_back(varDecl);
 
+        //Check if the id is already in the table at the current scope; if it is throw an error, if not add it
             if (checkTableType(varId, currentScope, varType) == false) {
                 ScopeNode* symbol = new ScopeNode;
                 symbol->scope = currentScope;
                 symbol->type = varTypeVal;
+                
                 symbol->value = varIdVal;
                 symbolTree->children.push_back(symbol);
-                errorsList.push_back("DEBUG - SEMANTIC - VALID - New Variable Initialized");
+                errorsList.push_back("DEBUG - SEMANTIC - VALID - New Variable Initialized - " + varIdVal + " of type " + varTypeVal + ".");
             }
             else {
                 semanticErrors++;
@@ -183,15 +210,47 @@ ASTNode* buildAST(Node* node) {
             bool idCheck = checkTableScope(id, currentScope);
             
             string expressionType = node->children[1]->value;
+            string expressionId = node->children[1]->children[0]->name;
+            string expressionName = node->children[1]->children[0]->value;
+            
+            //Mistakes in parsing lead to needing to change values
+            if (expressionType == "digitToken") { 
+                expressionType = "int";    }
+            if (expressionType == "quoteToken") { expressionType = "string"; }
+            if ((expressionType == "trueToken") || expressionType == "falseToken") { expressionType = "bool"; }
+            if (expressionType == "charToken") { expressionType = getType(expressionName, currentScope); }
 
-            if (checkTable(id)) {
-                if (checkTableType(id, currentScope, expressionType)) {
-                    root->children.push_back(assignmentStatement);
-                }
-                else {
-                    semanticErrors++;
-                    errorsList.push_back("DEBUG - SEMANTIC - ERROR: Type Mismatch. Tried to assign " + id + " to " + expressionType);
-                }
+            // If the id is in current scope
+            if (idCheck) {
+                // if it is being assigned to itself, error
+                    if (id == expressionName) {
+                        semanticErrors++;
+                        errorsList.push_back("DEBUG - SEMANTIC - ERROR: Cannot assign " + id + " to itself.");
+                    }
+                //if it matches the type of the expression; if the expression is a char, type check, otherwise valid
+                    else if (getType(id, currentScope) == expressionType) {
+                        if (expressionId == id) {
+                            if (checkTableScope(expressionName, currentScope)) {
+                                errorsList.push_back("DEBUG - SEMANTIC - VALID - Variable " + id + " assigned to " + expressionName);
+                                root->children.push_back(assignmentStatement);
+                            }
+                            else {
+                                semanticErrors++;
+                                errorsList.push_back("DEBUG - SEMANTIC - ERROR: Type Mismatch. Tried to assign " + id + " to " + expressionType);
+                            }
+                        }
+                        else
+                        {
+                            errorsList.push_back("DEBUG - SEMANTIC - VALID - Variable " + id + " assigned to " + expressionName);
+                            root->children.push_back(assignmentStatement);
+                        }
+                    }
+                    else {
+                        semanticErrors++;
+                        errorsList.push_back("DEBUG - SEMANTIC - ERROR: Type Mismatch. Tried to assign " + id + " to " + expressionType);
+                    }
+                
+                
             }
             else {
                 semanticErrors++;
@@ -225,22 +284,14 @@ ASTNode* buildAST(Node* node) {
            
             auto id = node->children[0]->value;
             idNode->value = id;
-            // Set the scope on the id
-            //id.scopeId = this.scopeTree.curr.value.id;
+            
             root->children.push_back(idNode);
             
-            // Check if variable declared in current or parent scopes
-            // If we find it in scope, return the type of the variable
-            //var foundType = this.checkScopes(node.children[0]);
-            // Mark id as used
-            //this.markAsUsed(node.children[0]);
-            // Look for used but uninitialized variables
-            //this.checkUsedButUninit(node.children[0]);
-            
+             
 
         }
         else if (currentName == "intExpr") {
-            //cout << "hit int" << endl;
+           
             // Check if it is not a digit
             if (node->children.size() > 1) {
                 ASTNode* intExpr = new ASTNode;
@@ -347,6 +398,7 @@ ASTNode* Semantics::working(Node* node) {
 
     ASTNode* AST = new ASTNode;
 
+    //CodeGeneration CodeString;
     errorsList = {};
 
     symbolTree = new ScopeNode();
@@ -364,8 +416,13 @@ ASTNode* Semantics::working(Node* node) {
             cout << x << endl;
         }
         cout << "" << endl;
+        for (int i = 0; i < symbolTree->children.size(); i++) {
+            cout << symbolTree->children[i]->scope << " , " << symbolTree->children[i]->value << " , " << symbolTree->children[i]->type << endl;
+        }
+        cout << "" << endl;
         printAST(root);
         cout << "\nSemantic Analysis Completed with 0 errors." << endl;
+       // CodeString.createCode(root);
     }
     else {
         cout << "\n\n\n" << endl;
@@ -373,6 +430,9 @@ ASTNode* Semantics::working(Node* node) {
         for (string x : errorsList) {
             cout << x << endl;
         }
+        //for (int i = 0; i < symbolTree->children.size(); i++) {
+          //  cout << symbolTree->children[i]->scope << " , " << symbolTree->children[i]->value << " , " << symbolTree->children[i]->type << endl;
+        //}
         cout << "\nSemantic Analysis Completed with " << semanticErrors << " errors." << endl;
     }
     
