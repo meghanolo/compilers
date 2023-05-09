@@ -5,6 +5,7 @@
 #include <list>
 #include <vector>
 #include <memory>
+//#include "codegeneration.cpp"
 
 using namespace std;
 
@@ -183,9 +184,18 @@ ASTNode* buildAST(Node* node) {
             bool idCheck = checkTableScope(id, currentScope);
             
             string expressionType = node->children[1]->value;
+            string expressionName = node->children[1]->name;
+            
+            if (expressionType == "digitToken") { 
+                expressionType = "int";    }
+            if (expressionType == "quoteToken") { expressionType = "string"; }
+            if ((expressionType == "trueToken") || expressionType == "falseToken") { expressionType = "bool"; }
+            
+
 
             if (checkTable(id)) {
                 if (checkTableType(id, currentScope, expressionType)) {
+                    errorsList.push_back("DEBUG - SEMANTIC - VALID - Variable " + id + " assigned to " + expressionName);
                     root->children.push_back(assignmentStatement);
                 }
                 else {
@@ -347,6 +357,7 @@ ASTNode* Semantics::working(Node* node) {
 
     ASTNode* AST = new ASTNode;
 
+    //CodeGeneration CodeString;
     errorsList = {};
 
     symbolTree = new ScopeNode();
@@ -364,8 +375,13 @@ ASTNode* Semantics::working(Node* node) {
             cout << x << endl;
         }
         cout << "" << endl;
+        for (int i = 0; i < symbolTree->children.size(); i++) {
+            cout << symbolTree->children[i]->scope << " , " << symbolTree->children[i]->value << " , " << symbolTree->children[i]->type << endl;
+        }
+        cout << "" << endl;
         printAST(root);
         cout << "\nSemantic Analysis Completed with 0 errors." << endl;
+       // CodeString.createCode(root);
     }
     else {
         cout << "\n\n\n" << endl;

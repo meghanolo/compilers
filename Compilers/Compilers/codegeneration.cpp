@@ -5,11 +5,10 @@
 #include <list>
 #include <vector>
 #include <memory>
-#include "semantics.cpp"
 
 using namespace std;
 
-ScopeNode* symbolTree;
+//ScopeNode* symbolTree;
 int startAddress;
 vector<string> tempCode;
 
@@ -29,25 +28,25 @@ CodeGeneration::~CodeGeneration()
 = default;
 
 auto loadAConst(int digit) {
-    auto holder = [];
+    vector<string> holder;
     holder.push_back("A9");
     holder.push_back(digit.toString(16).padStart(2, "0"));
     return holder;
 }
 auto loadAMem(int digit) {
-    let holder = [];
+    vector<string> holder;
     holder.push_back("AD");
     splitAddress(digit, holder);
     return holder;
 }
 auto stoMem(int num) {
-    let holder = [];
+    vector<string> holder;
     holder.push_back("8D");
     splitAddress(num, holder);
     return holder;
 }
 auto add(int num) {
-    let holder = [];
+    vector<string> holder;
     holder.push_back("6D");
     splitAddress(num, holder);
     return holder;
@@ -58,23 +57,24 @@ void splitAddress(int number, vector<string> holder) {
     holder.push_back(val.substring(0, 2));
 }
 auto loadY(int number) {
-    auto holder = [];
+    vector<string> holder;
     holder.push_back("AC");
     splitAddress(num, holder);
     return holder;
 }
-function loadYA() {
-    let holder = [];
+auto loadYA() {
+    vector<string> holder;
     holder.push_back("AC");
+    return holder;
 }
-function loadXMem(num: number) {
-    let holder = [];
+auto loadXMem(int num) {
+    vector<string> holder;
     holder.push_back("AE");
     splitAddress(num, holder);
     return holder;
 }
 auto loadXConst(int num) {
-    let holder = [];
+    vector<string> holder;
     holder.push_back("A2");
     holder.push_back(num.toString(16).padStart(2, "0"));
     return holder;
@@ -102,7 +102,7 @@ auto stringRef(int val) {
     }
 }
 auto compareXmem(int num) {
-    let holder = [];
+    auto holder = [];
     holder.push_back("EC");
     splitAddress(num, holder);
     return holder;
@@ -119,12 +119,13 @@ string codeString (Node* node) {
         tempCode.push_back("00");
     }
     else if (currentName == "Block") {
-        this.topTable = new SymbolTable(this.topTable);
+        
+        //topTable = new s(topTable);
         for (int i = 0; i < node->children.size(); i++) {
             codeString(node->children[i]);
         }
 
-        this.topTable = this.topTable.parent;
+        //topTable = topTable.parent;
     }
     else if (currentName == "varDecl") {
 
@@ -144,17 +145,17 @@ string codeString (Node* node) {
 
         tempCode = tempCode.concat(loadAConst(parseInt(digitexpr.digit.toString())));
 
-        let length = this.data.length;
-        this.data = this.data.concat(string.value.substring(1, string.value.length - 1).split("").map(convertHex));
-        this.data.push_back("00");
+        auto length = data.length;
+        data = data.concat(string.value.substring(1, string.value.length - 1).split("").map(convertHex));
+        data.push_back("00");
         //todo: treat the length like placeholder
-        tempCode = tempCode.concat([String(20000 + length)], loadAMem(parseInt(length.toString())))
+        tempCode = tempCode.concat([string(20000 + length)], loadAMem(parseInt(length.toString())))
 
         auto isInt = false;
         auto typeOfPrint = node->children[0]->name;
         if (typeOfPrint == "charToken") {
             
-            auto varInfo = this.topTable.lookUp(id.id.toString());
+            auto varInfo = topTable.lookUp(id.id.toString());
             if (varInfo == = null) {
                 genErrors++;
                 codeGenErrors.push_back("Var not found");
@@ -192,7 +193,7 @@ string codeString (Node* node) {
     }
     else if (currentName == "assignmentStatement") {
         assignmentstatement.expr.visit(this);                   //visit expr
-        let varInfo = this.topTable.lookUp(assignmentstatement.id.toString());                  //look up 
+        auto varInfo = topTable.lookUp(assignmentstatement.id.toString());                  //look up 
         if (varInfo == = null) {
             throw new Error("Var not found");
         }
@@ -204,16 +205,16 @@ string codeString (Node* node) {
 
     }
     else if (currentName == "whileStatement") {
-        let whileStart = tempCode.length;
-        whilestatement.booleanexpr.right.visit(this);       //emit the condition which is boolexpr
+        auto whileStart = tempCode.length;
+        //emit the condition which is boolexpr
         tempCode = tempCode.concat(stoMem(0));            //sto in temporary register from A
-        tempCode = tempCode.concat(loadXMem(0));          //load it into the x register from that location
-        whilestatement.booleanexpr.left.visit(this);        //emit left hand side of relation
+        tempCode = tempCode.concat(loadXMem(0));  
+        //emit left hand side of relation
         tempCode = tempCode.concat(stoMem(0));            //sto in temp register from A
         tempCode = tempCode.concat(compareXmem(0));       //if condition is false then jump to the end of while body
         if (whilestatement.booleanexpr.boolop.type == = "==") {
             tempCode.push_back("D0");                           //BNE
-            let jumpIndex = tempCode.length;
+            auto jumpIndex = tempCode.length;
             tempCode.push_back("00");
             whilestatement.block.visit(this);
             tempCode = tempCode.concat(loadXConst(1));
@@ -228,14 +229,14 @@ string codeString (Node* node) {
         }
         else {
             tempCode.push_back("D0");                       //BNE
-            let jumpIndex = tempCode.length;
+            auto jumpIndex = tempCode.length;
             tempCode.push_back("00");
             tempCode = tempCode.concat(loadXConst(1));
             tempCode = tempCode.concat(loadAConst(0));
             tempCode = tempCode.concat(stoMem(0));
             tempCode = tempCode.concat(compareXmem(0));//compare X from mem
             tempCode.push_back("D0");
-            let afterWhileIndex = tempCode.length;
+            auto afterWhileIndex = tempCode.length;
             tempCode.push_back("00");
             tempCode[jumpIndex] = convertHexNum(tempCode.length - jumpIndex);
             whilestatement.block.visit(this);
@@ -262,21 +263,21 @@ string codeString (Node* node) {
    
         if (ifstatement.booleanExpr.boolop.type == = "==") {
             tempCode.push_back("D0");                       
-            let jumpIndex = tempCode.length;
+            auto jumpIndex = tempCode.length;
             tempCode.push_back("00");
             ifstatement.block.visit(this);
             tempCode[jumpIndex] = convertHexNum(tempCode.length - jumpIndex);
         }
         else {
             tempCode.push_back("D0");                       
-            let jumpIndex = tempCode.length;
+            auto jumpIndex = tempCode.length;
             tempCode.push_back("00");
             tempCode = tempCode.concat(loadXConst(1));
             tempCode = tempCode.concat(loadAConst(0));
             tempCode = tempCode.concat(stoMem(0));
             tempCode = tempCode.concat(compareXmem(0));
             tempCode.push_back("D0");
-            let afterIfIndex = tempCode.length;
+            auto afterIfIndex = tempCode.length;
             tempCode.push_back("00");
             tempCode[jumpIndex] = convertHexNum(tempCode.length - jumpIndex);
             ifstatement.block.visit(this);
@@ -285,7 +286,7 @@ string codeString (Node* node) {
         
     }
     else if (currentName == "id") {
-    let varInfo = this.topTable.lookUp(idexpr.id.toString());                  //look up 
+    auto varInfo = topTable.lookUp(idexpr.id.toString());                  //look up 
     if (varInfo == = null) {
         throw new Error("Var not found");
     }
@@ -297,7 +298,7 @@ string codeString (Node* node) {
     tempCode = tempCode.concat(loadAConst(node->children[0].str()));    //load accumulator with left
     tempCode = tempCode.concat(stoMem(0));                                //store that into memeory
     
-    codeString(node->children[1]);
+    //codeString(node->children[1]);
     tempCode = tempCode.concat(add(0));                                  
 
    
@@ -327,27 +328,27 @@ string codeString (Node* node) {
 void secondPass() {
     //iterate through all the elements in code and whenever 10000 is seen fix up for var memory addr 
     //if 20000 is seen fix up for string addr 
-    this.varSection = [];
-    for (let i = 0; i < this.startAddr; i++) {
-        this.varSection.push_back("00");
+    varSection = [];
+    for (auto i = 0; i < startAddr; i++) {
+        varSection.push_back("00");
     }
-    let varOffset = tempCode.length + this.data.length
-        let stringOffset = tempCode.length;
+    auto varOffset = tempCode.length + data.length
+        auto stringOffset = tempCode.length;
 
-    for (let i = 0; i < tempCode.length; i++) {
+    for (auto i = 0; i < tempCode.length; i++) {
         if (varRef(parseInt(tempCode[i].toString()))) {
-            let fixedAddress = parseInt(tempCode[i].toString()) - 10000 + varOffset;  // this is the true addr of var at the very end
+            auto fixedAddress = parseInt(tempCode[i].toString()) - 10000 + varOffset;  // this is the true addr of var at the very end
             //console.log(`fixedAddr = ${fixedAddress} i =  ${i} tempCode[i] =  ${tempCode[i]} varoffset = ${varOffset}`)
-            let holder = [];
+            auto holder = [];
             splitAddress(fixedAddress, holder);
             tempCode[i + 2] = holder[0];
             tempCode[i + 3] = holder[1];
             tempCode[i] = "EA";  //EA is no OP
         }
         else if (stringRef(parseInt(tempCode[i].toString()))) {
-            let fixedAddress = parseInt(tempCode[i].toString()) - 20000 + stringOffset;  // this is the true addr of string at the very end
+            auto fixedAddress = parseInt(tempCode[i].toString()) - 20000 + stringOffset;  // this is the true addr of string at the very end
             //console.log(`fixedAddr = ${fixedAddress} i =  ${i} tempCode[i] =  ${tempCode[i]} stringoffset = ${stringOffset}`)
-            let holder = [];
+            auto holder = [];
             splitAddress(fixedAddress, holder);
             tempCode[i + 2] = holder[0];
             tempCode[i + 3] = holder[1];
@@ -399,22 +400,22 @@ int CodeGeneration::createCode(Node* node) {
 
  
 
-public  addId(id : string, type : string, linePos : number, lineNum : number) {
+/*public  addId(id : string, type : string, linePos : number, lineNum : number) {
     let newId = new Symbol(id, 0, type, linePos, lineNum);
-    this.symbols.push_back(newId)
+    symbols.push_back(newId)
         return newId;
 }
 public lookUp(name: string) {
-    for (let i = 0; i < this.symbols.length; i++) {
-        if (name == = this.symbols[i].id) {
-            return this.symbols[i];
+    for (let i = 0; i < symbols.length; i++) {
+        if (name == = symbols[i].id) {
+            return symbols[i];
         }
     }
-    if (this.parent = null) {
+    if (parent = null) {
         return null;
     }
     else {
-        return this.parent.lookUp(name);
+        return parent.lookUp(name);
     }
 }
-}
+}*/
