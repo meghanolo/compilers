@@ -114,24 +114,30 @@ Node* parseCharList(vector<Token> lexerList) {
     charList->name = "charList";
 
     string token = lexerList.at(current).tokenType;
+    string charVal = lexerList.at(current).value;
+    
 
     if (token == "charToken") {
         auto x = parseChar(lexerList);
         if (x != NULL) {
+            charList->value = charList->value + charVal;
             charList->children.push_back(x);
         }
         auto y = parseCharList(lexerList);
         if (y != NULL) {
+            charList->value = charList->value + charVal;
             charList->children.push_back(y);
         }
     }
     else if (token == "spaceToken") {
         auto x = parseSpace(lexerList);
         if (x != NULL) {
+            charList->value = charList->value + charVal;
             charList->children.push_back(x);
         }
         auto y = parseCharList(lexerList);
         if (y != NULL) {
+            charList->value = charList->value + charVal;
             charList->children.push_back(y);
         }
     }
@@ -251,6 +257,7 @@ Node* parseExpr(vector<Token> lexerList) {
     expression->name = "Expression";
 
     string token = lexerList.at(current).tokenType;
+    //string character = lexerList.at(current).
 
     if (token == "charToken") {
         auto x = parseId(lexerList);
@@ -545,6 +552,9 @@ Node* parseIntExpr(vector<Token> lexerList) {
     intExpr->name = "intExpr";
 
     string token = lexerList.at(current).tokenType;
+    string digit = lexerList.at(current).value;
+
+    intExpr->value = digit;
 
     int counter = current + 1;
     if (token == "digitToken") {

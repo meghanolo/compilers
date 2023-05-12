@@ -8,17 +8,276 @@
 
 using namespace std;
 
-//ScopeNode* symbolTree;
-int startAddress;
-vector<string> tempCode;
+//I used the same tutor as Zach Garfield who basically explained it the same way in C++
 
+//ScopeNode* symbolTree;
 int genErrors = 0;
 vector<string> codeGenErrors;
+int startAddr = 0;
+
+auto loadAConst(int digit) {
+    vector<string> holder;
+    holder.push_back("A9");
+    //holder.push_back("0x" + digit.toString(16).insert(0, 2 - digit.toString(16).size()(), '0'));
+    return holder;
+}
+
+
+auto loadXConst(int num) {
+    vector<string> holder;
+    holder.push_back("A2");
+    holder.push_back(num);
+    return holder;
+}
+
+auto compareXmem(int num) {
+    vector<string> holder;
+    holder.push_back("EC");
+    return holder;
+}
+auto toNegative(int num) {
+    return ~num & 0xff
+}
+
+string int_to_hex(int i)
+{
+    std::stringstream stream;
+    stream << "0x"
+        << std::setfill('0')
+        << std::hex << i;
+    return stream.str();
+}
+
+struct ScopeNode {
+public:
+    int scope;
+    string value;
+    string type;
+    string address;
+    vector<ScopeNode*> children;
+    ScopeNode(string x, string y, string z) {
+        value = x;
+        type = y;
+        address = z;
+    }
+    ScopeNode();
+};
+
+int startAddress = 0;
+ScopeNode* codeGenVars = new ScopeNode;
+//Node struct
+struct Node {
+    string name;
+    string value;
+    vector<Node*> children;
+};
+
+class ASTNode {
+public:
+    string type;
+    string value;
+    vector<ASTNode*> children;
+    void visit(Visitor v) {
+        v.visitNode(this);
+    }
+    
+};
+
+
+
+class Visitor {
+
+public: 
+    vector<string> opCodes;
+    vector<string> variables;
+    vector<string> strings;
+
+    string lookUp(string x) {
+        for (int i = 0; i < codeGenVars.children.size(); i++) {
+            if (x == codeGenVars.children[i]->value) {
+                return codeGenVars.children[i]->type;
+            }
+        }
+
+    }
+
+    string lookUpAdd(string x) {
+        for (int i = 0; i < codeGenVars.children.size(); i++) {
+            if (x == codeGenVars.children[i]->value) {
+                return codeGenVars.children[i].address;
+            }
+        }
+    }
+    void visitNode(ASTNode* node) {
+        auto nodeType = node->type;
+
+        if (nodeType == "block") {
+            visitBlock(node);
+        }
+        else if (nodeType == "varDecl") {
+            visitVarDecl(node);
+        }
+        else if (nodeType == "assignmentStatement") {
+            visitAssign(node);
+        }
+        else if (nodeType == "printStatement") {
+            visitPrintStatement(node);
+        }
+        else if (nodeType == "whileStatement") {
+            visitWhile(node);
+        }
+        else if (nodeType == "ifStatement") {
+            visitIf(node);
+        }
+        else if (nodeType == "idNode") {
+            visitID(node);
+        }
+        else if (nodeType == "String") {
+            visitString(node);
+        }
+        else if (nodeType == "boolVal") {
+            visitBool(node);
+        }
+        else if (nodeType == "intExpr") {
+            visitIntExpr(node);
+        }
+
+    }
+    void visitBlock(ASTNode* node) {
+        for (ASTNode* child : node->children) {
+            visitNode(child);
+        }
+    }
+    void visitVarDecl(ASTNode* node) {
+
+        codeGenVars.children.push_back(ScopeNode(node->children[0]->value, node->children[0]->type, startAddress));
+        
+        startAddr++;
+
+        //increment vars array by 1 in length
+        //mem location of variable is location in vars array
+        //placeholder for x
+        //second pass fills in placeholders - note that its a var
+        //associate mem address w variable
+
+    }
+    void visitPrintStatement(ASTNode* node) {
+
+        string typeOfPrint = node->children[0]->type;
+        cout << typeOfPrint << endl;
+
+        auto isInt = false;
+      
+        if (typeOfPrint == "digitToken") {
+
+            opCodes.push_back("A2");                  
+            opCodes.push_back("01")                        
+            visit(node->children[0]);
+            opCodes.push_back("8D");    
+            opCodes.push_back("AC");     
+            
+            opCodes.push_back("FF");
+
+            //loadAReg w the constant
+            //use 00 as temp 
+            //copy a to 00 from 00 to Y
+            //put 1 into x for print int
+            //FF
+       }
+        if (typeOfPrint == "stringExpr") {
+            opCodes.push_back("A2")                        
+           opCodes.push_back("02")                       
+            visit(node->children[0]);
+            opCodes.push_back("8D");  
+            opCodes.push_back("AC");     
+            opCodes.push_back("FF");                  
+            //refer to as address of sa=tarting byte
+            //value in x is starting Address of string
+            //visit firsdt child of node
+            //puts address in a register
+            //copy a to 00 from 00 to Y
+            //put 2 into x for print string
+            //FF
+
+        }
+        if (typeOfPrint == "id") {
+           
+            string varType = lookUp(node->children[1]);
+            if (varType == NULL) {
+                cout << "CODE GEN - ERROR - Variable not found." << endl;
+            }
+            else if (varType == "string") {
+                isInt = false;
+            }
+            else {
+                isInt = true;
+            }
+        }
+
+    }
+    void visitAssignmentStatement(ASTNode* node) {
+        visit(node->children[0]);                  
+        auto varType = lookUp(node->value);
+        auto varAdd = lookUpAdd(node->value);
+        if (varType == NULL) {
+            cout << "CODE GEN - ERROR - Variable not found." << endl;
+        }
+        opCodes.push_back("Var" + varAdd);
+        stoMem(varAdd);
+    }
+
+    void visitIfStatement(ASTNode* node) {
+
+
+            visit(node->children[0]);      
+                                                        
+            opCodes.push_back("8D");        
+            opCodes.push_back(loadXMem(0));      
+           
+    opCodes.push_back("8D");        
+    opCodes.push_back(compareXmem(0));   
+   
+    if (visit(node->children[1]) == "==") {
+        opCodes.push_back("D0");                       
+        auto jumpIndex = opCodes.size();
+        opCodes.push_back("00");
+        visit(node->children[1]);
+        opCodes[jumpIndex] = (opCodes.size() - jumpIndex);
+    }
+        else {
+        opCodes.push_back("D0");                       
+            auto jumpIndex = opCodes.size();
+            opCodes.push_back("00");
+            opCodes.push_back(loadXConst(1));
+            opCodes.push_back(loadAConst(0));
+            opCodes.push_back("8D");
+            opCodes.push_back(compareXmem(0));
+            opCodes.push_back("D0");
+            auto afterIfIndex = opCodes.size();
+            opCodes.push_back("00");
+            opCodes[jumpIndex] = (opCodes.size() - jumpIndex);
+            visit(node->children[1]);
+            opCodes[afterIfIndex] = (opCodes.size() - afterIfIndex);
+        }
+    }
+
+    void visitIntExpr(ASTNode* node) {
+        opCodes.push_back(loadAConst(node->children[0]->value));    //load accumulator with left
+        opCodes.push_back("8D");                                //store that into memeory
+       visit(node->children[0]);                                              //load acumulator with expr 
+        opCodes.push_back(("6D"));
+    }
+    
+
+
+private :
+
+};
 
 class CodeGeneration {
 public:
     ~CodeGeneration();
-    int createCode(Node* cst);
+    int createCode(ASTNode* ast);
 
 private:
 
@@ -27,351 +286,19 @@ private:
 CodeGeneration::~CodeGeneration()
 = default;
 
-auto loadAConst(int digit) {
-    vector<string> holder;
-    holder.push_back("A9");
-    holder.push_back(digit.toString(16).padStart(2, "0"));
-    return holder;
-}
-auto loadAMem(int digit) {
-    vector<string> holder;
-    holder.push_back("AD");
-    splitAddress(digit, holder);
-    return holder;
-}
-auto stoMem(int num) {
-    vector<string> holder;
-    holder.push_back("8D");
-    splitAddress(num, holder);
-    return holder;
-}
-auto add(int num) {
-    vector<string> holder;
-    holder.push_back("6D");
-    splitAddress(num, holder);
-    return holder;
-}
-void splitAddress(int number, vector<string> holder) {
-    auto val = number.str(16).padStart(4, "0");
-    holder.push_back(val.substring(2, 4));
-    holder.push_back(val.substring(0, 2));
-}
-auto loadY(int number) {
-    vector<string> holder;
-    holder.push_back("AC");
-    splitAddress(num, holder);
-    return holder;
-}
-auto loadYA() {
-    vector<string> holder;
-    holder.push_back("AC");
-    return holder;
-}
-auto loadXMem(int num) {
-    vector<string> holder;
-    holder.push_back("AE");
-    splitAddress(num, holder);
-    return holder;
-}
-auto loadXConst(int num) {
-    vector<string> holder;
-    holder.push_back("A2");
-    holder.push_back(num.toString(16).padStart(2, "0"));
-    return holder;
-}
-auto convertHex(string val) {
-    return val.charCodeAt(0).toString(16).padStart(2, "0");
-}
-auto convertHexNum(int num) {
-    return num.toString(16).padStart(2, "0");
-}
-auto varRef(int val) {
-    if (val >= 10000 && val < 20000) {
-        return true;
-    }
-    else {
-        return false;
-    }
-}
-auto stringRef(int val) {
-    if (val >= 20000 && val < 30000) {
-        return true;
-    }
-    else {
-        return false;
-    }
-}
-auto compareXmem(int num) {
-    auto holder = [];
-    holder.push_back("EC");
-    splitAddress(num, holder);
-    return holder;
-}
-auto toNegative(int num) {
-    return ~num & 0xff
-}
-
-
-string codeString (Node* node) {
-
-    string currentName = node->name;
-    if (currentName == "Program") {
-        tempCode.push_back("00");
-    }
-    else if (currentName == "Block") {
-        
-        //topTable = new s(topTable);
-        for (int i = 0; i < node->children.size(); i++) {
-            codeString(node->children[i]);
-        }
-
-        //topTable = topTable.parent;
-    }
-    else if (currentName == "varDecl") {
-
-        string varTypeVal = node->children[0]->value;
-        string varIdVal = node->children[1]->value;
-
-        ScopeNode* symbol = new ScopeNode;
-        symbol->type = varTypeVal;
-        symbol->value = varIdVal;
-        symbol->memAddr = startAddr;
-        symbolTree->children.push_back(symbol);
-
-        startAddr++;
-
-    }
-    else if (currentName == "printStatement") {
-
-        tempCode = tempCode.concat(loadAConst(parseInt(digitexpr.digit.toString())));
-
-        auto length = data.length;
-        data = data.concat(string.value.substring(1, string.value.length - 1).split("").map(convertHex));
-        data.push_back("00");
-        //todo: treat the length like placeholder
-        tempCode = tempCode.concat([string(20000 + length)], loadAMem(parseInt(length.toString())))
-
-        auto isInt = false;
-        auto typeOfPrint = node->children[0]->name;
-        if (typeOfPrint == "charToken") {
-            
-            auto varInfo = topTable.lookUp(id.id.toString());
-            if (varInfo == = null) {
-                genErrors++;
-                codeGenErrors.push_back("Var not found");
-            }
-            if (varInfo.type == = "string") {
-                isInt = false;
-            }
-            else {
-                isInt = true;
-            }
-        }
-        if (typeOfPrint == "digitToken") {
-            tempCode.push_back("A2");                       //LDX
-            tempCode.push_back("01");                  //putting 01 into the x reg
-            
-            printstatement.expr.visit(this);
-
-            tempCode = tempCode.concat(stoMem(0));    //Store that into 0 memory 
-            tempCode = tempCode.concat(loadY(0));     //load into y register
-            //Sto A in mem
-            //load y from mem
-
-            tempCode.push_back("FF");                  //SYS call
-        }
-        else {
-            tempCode.push_back("A2");                       //LDX
-            tempCode.push_back("02");                        //putting 02 into the x reg
-                printstatement.expr.visit(this);
-            tempCode = tempCode.concat(stoMem(0));    //Store that into 0 memory 
-            tempCode = tempCode.concat(loadY(0));     //load into y register
-            tempCode.push_back("FF");                        //SYS call
-        }
-
-        
-    }
-    else if (currentName == "assignmentStatement") {
-        assignmentstatement.expr.visit(this);                   //visit expr
-        auto varInfo = topTable.lookUp(assignmentstatement.id.toString());                  //look up 
-        if (varInfo == = null) {
-            throw new Error("Var not found");
-        }
-        tempCode = tempCode.concat([String(10000 + varInfo.memAddr)], stoMem(varInfo.memAddr));  //look up var in the toptable
-        //emit 8d for store with 10000 for temp addr
-
-
-        
-
-    }
-    else if (currentName == "whileStatement") {
-        auto whileStart = tempCode.length;
-        //emit the condition which is boolexpr
-        tempCode = tempCode.concat(stoMem(0));            //sto in temporary register from A
-        tempCode = tempCode.concat(loadXMem(0));  
-        //emit left hand side of relation
-        tempCode = tempCode.concat(stoMem(0));            //sto in temp register from A
-        tempCode = tempCode.concat(compareXmem(0));       //if condition is false then jump to the end of while body
-        if (whilestatement.booleanexpr.boolop.type == = "==") {
-            tempCode.push_back("D0");                           //BNE
-            auto jumpIndex = tempCode.length;
-            tempCode.push_back("00");
-            whilestatement.block.visit(this);
-            tempCode = tempCode.concat(loadXConst(1));
-            tempCode = tempCode.concat(loadAConst(0));
-            tempCode = tempCode.concat(stoMem(0));
-            tempCode = tempCode.concat(compareXmem(0));//compare X from mem
-            tempCode.push_back("D0");
-            tempCode.push_back(convertHexNum(toNegative(tempCode.length - whileStart)));
-            tempCode[jumpIndex] = convertHexNum(tempCode.length - jumpIndex);     //otherwise emit while loop body
-        //uncondition jump back up to condition using negative offset for jump
-        //emit place where you want to jump to if condition fails
-        }
-        else {
-            tempCode.push_back("D0");                       //BNE
-            auto jumpIndex = tempCode.length;
-            tempCode.push_back("00");
-            tempCode = tempCode.concat(loadXConst(1));
-            tempCode = tempCode.concat(loadAConst(0));
-            tempCode = tempCode.concat(stoMem(0));
-            tempCode = tempCode.concat(compareXmem(0));//compare X from mem
-            tempCode.push_back("D0");
-            auto afterWhileIndex = tempCode.length;
-            tempCode.push_back("00");
-            tempCode[jumpIndex] = convertHexNum(tempCode.length - jumpIndex);
-            whilestatement.block.visit(this);
-            tempCode = tempCode.concat(loadXConst(1));
-            tempCode = tempCode.concat(loadAConst(0));
-            tempCode = tempCode.concat(stoMem(0));
-            tempCode = tempCode.concat(compareXmem(0));//compare X from mem
-            tempCode.push_back("D0");
-            tempCode.push_back(convertHexNum(toNegative(tempCode.length - whileStart)));
-            tempCode[afterWhileIndex] = convertHexNum(tempCode.length - afterWhileIndex);
-        }
-        
-
-    }
-    else if (currentName == "ifStatement") {    
-                                    
-    codeString(node->children[0]);
-    tempCode = tempCode.concat(stoMem(0));        
-    tempCode = tempCode.concat(loadXMem(0));      
-
-    codeString(node->children[1]);
-    tempCode = tempCode.concat(stoMem(0));        
-    tempCode = tempCode.concat(compareXmem(0));   
-   
-        if (ifstatement.booleanExpr.boolop.type == = "==") {
-            tempCode.push_back("D0");                       
-            auto jumpIndex = tempCode.length;
-            tempCode.push_back("00");
-            ifstatement.block.visit(this);
-            tempCode[jumpIndex] = convertHexNum(tempCode.length - jumpIndex);
-        }
-        else {
-            tempCode.push_back("D0");                       
-            auto jumpIndex = tempCode.length;
-            tempCode.push_back("00");
-            tempCode = tempCode.concat(loadXConst(1));
-            tempCode = tempCode.concat(loadAConst(0));
-            tempCode = tempCode.concat(stoMem(0));
-            tempCode = tempCode.concat(compareXmem(0));
-            tempCode.push_back("D0");
-            auto afterIfIndex = tempCode.length;
-            tempCode.push_back("00");
-            tempCode[jumpIndex] = convertHexNum(tempCode.length - jumpIndex);
-            ifstatement.block.visit(this);
-            tempCode[afterIfIndex] = convertHexNum(tempCode.length - afterIfIndex);
-        }
-        
-    }
-    else if (currentName == "id") {
-    auto varInfo = topTable.lookUp(idexpr.id.toString());                  //look up 
-    if (varInfo == = null) {
-        throw new Error("Var not found");
-    }
-    tempCode = tempCode.concat([String(10000 + varInfo.memAddr)], loadAMem(varInfo.memAddr));
-
-
-    }
-    else if (currentName == "intExpr") {
-    tempCode = tempCode.concat(loadAConst(node->children[0].str()));    //load accumulator with left
-    tempCode = tempCode.concat(stoMem(0));                                //store that into memeory
-    
-    //codeString(node->children[1]);
-    tempCode = tempCode.concat(add(0));                                  
-
-   
-
-
-    }
-    else if (currentName == "boolExpr") {
-
-      
-
-    }
-    else if (currentName == "stringExpr") {
-
-   
-    }
-    else {
-        for (int i = 0; i < node->children.size(); i++) {
-            codeString(node->children[i]);
-        }
-    }
-
-
-    return root;
-}
-
-
-void secondPass() {
-    //iterate through all the elements in code and whenever 10000 is seen fix up for var memory addr 
-    //if 20000 is seen fix up for string addr 
-    varSection = [];
-    for (auto i = 0; i < startAddr; i++) {
-        varSection.push_back("00");
-    }
-    auto varOffset = tempCode.length + data.length
-        auto stringOffset = tempCode.length;
-
-    for (auto i = 0; i < tempCode.length; i++) {
-        if (varRef(parseInt(tempCode[i].toString()))) {
-            auto fixedAddress = parseInt(tempCode[i].toString()) - 10000 + varOffset;  // this is the true addr of var at the very end
-            //console.log(`fixedAddr = ${fixedAddress} i =  ${i} tempCode[i] =  ${tempCode[i]} varoffset = ${varOffset}`)
-            auto holder = [];
-            splitAddress(fixedAddress, holder);
-            tempCode[i + 2] = holder[0];
-            tempCode[i + 3] = holder[1];
-            tempCode[i] = "EA";  //EA is no OP
-        }
-        else if (stringRef(parseInt(tempCode[i].toString()))) {
-            auto fixedAddress = parseInt(tempCode[i].toString()) - 20000 + stringOffset;  // this is the true addr of string at the very end
-            //console.log(`fixedAddr = ${fixedAddress} i =  ${i} tempCode[i] =  ${tempCode[i]} stringoffset = ${stringOffset}`)
-            auto holder = [];
-            splitAddress(fixedAddress, holder);
-            tempCode[i + 2] = holder[0];
-            tempCode[i + 3] = holder[1];
-            tempCode[i] = "EA";  //EA is no OP
-        }
-    }
-
-}
+//visitor = way to process a tree
 
 
 
-int CodeGeneration::createCode(Node* node) {
+
+
+int CodeGeneration::createCode(ASTNode* node) {
 
     ASTNode* AST = new ASTNode;
 
-    errorsList = {};
-
-    symbolTree = new ScopeNode();
-    root = new ASTNode;
     codeGenErrors = 0;
 
-    codeString(node);
-    secondPass();
+    visit(node);
 
     if (genErrors == 0) {
         cout << "\n\n\n" << endl;
@@ -380,7 +307,6 @@ int CodeGeneration::createCode(Node* node) {
             cout << x << endl;
         }
         cout << "" << endl;
-        cout << tempCode << endl;
         cout << "\nCode Generation Completed with 0 errors." << endl;
     }
     else {
@@ -397,25 +323,3 @@ int CodeGeneration::createCode(Node* node) {
 
     return 0;
 }
-
- 
-
-/*public  addId(id : string, type : string, linePos : number, lineNum : number) {
-    let newId = new Symbol(id, 0, type, linePos, lineNum);
-    symbols.push_back(newId)
-        return newId;
-}
-public lookUp(name: string) {
-    for (let i = 0; i < symbols.length; i++) {
-        if (name == = symbols[i].id) {
-            return symbols[i];
-        }
-    }
-    if (parent = null) {
-        return null;
-    }
-    else {
-        return parent.lookUp(name);
-    }
-}
-}*/

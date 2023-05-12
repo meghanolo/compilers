@@ -1,13 +1,347 @@
 ﻿  Compilers.cpp
 C:\Users\meggi\compilers\Compilers\Compilers\lexer.cpp(201,20): warning C4018: '<': signed/unsigned mismatch
 C:\Users\meggi\compilers\Compilers\Compilers\lexer.cpp(209,22): warning C4018: '<': signed/unsigned mismatch
-C:\Users\meggi\compilers\Compilers\Compilers\semantics.cpp(59,23): warning C4018: '<': signed/unsigned mismatch
-C:\Users\meggi\compilers\Compilers\Compilers\semantics.cpp(70,23): warning C4018: '<': signed/unsigned mismatch
-C:\Users\meggi\compilers\Compilers\Compilers\semantics.cpp(80,23): warning C4018: '<': signed/unsigned mismatch
-C:\Users\meggi\compilers\Compilers\Compilers\semantics.cpp(108,23): warning C4018: '<': signed/unsigned mismatch
-C:\Users\meggi\compilers\Compilers\Compilers\semantics.cpp(127,26): warning C4018: '<': signed/unsigned mismatch
-C:\Users\meggi\compilers\Compilers\Compilers\semantics.cpp(347,30): warning C4018: '<': signed/unsigned mismatch
-C:\Users\meggi\compilers\Compilers\Compilers\semantics.cpp(378,27): warning C4018: '<': signed/unsigned mismatch
+C:\Users\meggi\compilers\Compilers\Compilers\codegeneration.cpp(57,25): error C2664: 'void std::vector<std::string,std::allocator<std::string>>::push_back(const _Ty &)': cannot convert argument 1 from 'int' to 'const _Ty &'
+          with
+          [
+              _Ty=std::string
+          ]
+C:\Users\meggi\compilers\Compilers\Compilers\codegeneration.cpp(57,25): message : Reason: cannot convert from 'int' to 'const _Ty'
+          with
+          [
+              _Ty=std::string
+          ]
+C:\Users\meggi\compilers\Compilers\Compilers\codegeneration.cpp(57,25): message : No constructor could take the source type, or constructor overload resolution was ambiguous
+C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\VC\Tools\MSVC\14.28.29333\include\vector(716,10): message : see declaration of 'std::vector<std::string,std::allocator<std::string>>::push_back'
+C:\Users\meggi\compilers\Compilers\Compilers\codegeneration.cpp(89,1): error C2143: syntax error: missing ';' before '}'
+C:\Users\meggi\compilers\Compilers\Compilers\codegeneration.cpp(93,23): error C2079: 'stream' uses undefined class 'std::basic_stringstream<char,std::char_traits<char>,std::allocator<char>>'
+C:\Users\meggi\compilers\Compilers\Compilers\codegeneration.cpp(95,9): error C2297: '<<': illegal, right operand has type 'const char [3]'
+C:\Users\meggi\compilers\Compilers\Compilers\codegeneration.cpp(95,17): error C2039: 'setfill': is not a member of 'std'
+C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\VC\Tools\MSVC\14.28.29333\include\list(24): message : see declaration of 'std'
+C:\Users\meggi\compilers\Compilers\Compilers\codegeneration.cpp(95,24): error C3861: 'setfill': identifier not found
+C:\Users\meggi\compilers\Compilers\Compilers\codegeneration.cpp(96,21): error C2297: '<<': illegal, right operand has type 'std::ios_base &(__cdecl *)(std::ios_base &)'
+C:\Users\meggi\compilers\Compilers\Compilers\codegeneration.cpp(96,21): warning C4552: '<<': result of expression not used
+C:\Users\meggi\compilers\Compilers\Compilers\codegeneration.cpp(132,12): error C2065: 'Visitor': undeclared identifier
+C:\Users\meggi\compilers\Compilers\Compilers\codegeneration.cpp(132,21): error C2065: 'v': undeclared identifier
+C:\Users\meggi\compilers\Compilers\Compilers\codegeneration.cpp(132,22): error C2182: 'visit': illegal use of type 'void'
+C:\Users\meggi\compilers\Compilers\Compilers\codegeneration.cpp(132,24): error C2448: 'visit': function-style initializer appears to be a function definition
+C:\Users\meggi\compilers\Compilers\Compilers\codegeneration.cpp(169,13): error C3861: 'visitAssign': identifier not found
+C:\Users\meggi\compilers\Compilers\Compilers\codegeneration.cpp(175,13): error C3861: 'visitWhile': identifier not found
+C:\Users\meggi\compilers\Compilers\Compilers\codegeneration.cpp(178,13): error C3861: 'visitIf': identifier not found
+C:\Users\meggi\compilers\Compilers\Compilers\codegeneration.cpp(181,13): error C3861: 'visitID': identifier not found
+C:\Users\meggi\compilers\Compilers\Compilers\codegeneration.cpp(184,13): error C3861: 'visitString': identifier not found
+C:\Users\meggi\compilers\Compilers\Compilers\codegeneration.cpp(187,13): error C3861: 'visitBool': identifier not found
+C:\Users\meggi\compilers\Compilers\Compilers\codegeneration.cpp(201,1): error C2440: '<function-style-cast>': cannot convert from 'initializer list' to 'ScopeNode'
+C:\Users\meggi\compilers\Compilers\Compilers\codegeneration.cpp(201,1): message : No constructor could take the source type, or constructor overload resolution was ambiguous
+C:\Users\meggi\compilers\Compilers\Compilers\codegeneration.cpp(203,9): error C2065: 'startAddr': undeclared identifier
+C:\Users\meggi\compilers\Compilers\Compilers\codegeneration.cpp(223,13): error C2146: syntax error: missing ';' before identifier 'visit'
+C:\Users\meggi\compilers\Compilers\Compilers\codegeneration.cpp(223,13): error C2064: term does not evaluate to a function taking 1 arguments
+C:\Users\meggi\compilers\Compilers\Compilers\codegeneration.cpp(224,1): error C2664: 'void std::vector<std::string,std::allocator<std::string>>::push_back(const _Ty &)': cannot convert argument 1 from 'std::vector<std::string,std::allocator<std::string>>' to 'const _Ty &'
+          with
+          [
+              _Ty=std::string
+          ]
+C:\Users\meggi\compilers\Compilers\Compilers\codegeneration.cpp(224,1): message : Reason: cannot convert from 'std::vector<std::string,std::allocator<std::string>>' to 'const _Ty'
+          with
+          [
+              _Ty=std::string
+          ]
+C:\Users\meggi\compilers\Compilers\Compilers\codegeneration.cpp(224,37): message : No user-defined-conversion operator available that can perform this conversion, or the operator cannot be called
+C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\VC\Tools\MSVC\14.28.29333\include\vector(716,10): message : see declaration of 'std::vector<std::string,std::allocator<std::string>>::push_back'
+C:\Users\meggi\compilers\Compilers\Compilers\codegeneration.cpp(225,1): error C2664: 'void std::vector<std::string,std::allocator<std::string>>::push_back(const _Ty &)': cannot convert argument 1 from 'std::vector<std::string,std::allocator<std::string>>' to 'const _Ty &'
+          with
+          [
+              _Ty=std::string
+          ]
+C:\Users\meggi\compilers\Compilers\Compilers\codegeneration.cpp(225,1): message : Reason: cannot convert from 'std::vector<std::string,std::allocator<std::string>>' to 'const _Ty'
+          with
+          [
+              _Ty=std::string
+          ]
+C:\Users\meggi\compilers\Compilers\Compilers\codegeneration.cpp(225,36): message : No user-defined-conversion operator available that can perform this conversion, or the operator cannot be called
+C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\VC\Tools\MSVC\14.28.29333\include\vector(716,10): message : see declaration of 'std::vector<std::string,std::allocator<std::string>>::push_back'
+C:\Users\meggi\compilers\Compilers\Compilers\codegeneration.cpp(237,12): error C2146: syntax error: missing ';' before identifier 'opCodes'
+C:\Users\meggi\compilers\Compilers\Compilers\codegeneration.cpp(238,13): error C2146: syntax error: missing ';' before identifier 'visit'
+C:\Users\meggi\compilers\Compilers\Compilers\codegeneration.cpp(238,13): error C2064: term does not evaluate to a function taking 1 arguments
+C:\Users\meggi\compilers\Compilers\Compilers\codegeneration.cpp(239,1): error C2664: 'void std::vector<std::string,std::allocator<std::string>>::push_back(const _Ty &)': cannot convert argument 1 from 'std::vector<std::string,std::allocator<std::string>>' to 'const _Ty &'
+          with
+          [
+              _Ty=std::string
+          ]
+C:\Users\meggi\compilers\Compilers\Compilers\codegeneration.cpp(239,1): message : Reason: cannot convert from 'std::vector<std::string,std::allocator<std::string>>' to 'const _Ty'
+          with
+          [
+              _Ty=std::string
+          ]
+C:\Users\meggi\compilers\Compilers\Compilers\codegeneration.cpp(239,37): message : No user-defined-conversion operator available that can perform this conversion, or the operator cannot be called
+C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\VC\Tools\MSVC\14.28.29333\include\vector(716,10): message : see declaration of 'std::vector<std::string,std::allocator<std::string>>::push_back'
+C:\Users\meggi\compilers\Compilers\Compilers\codegeneration.cpp(240,1): error C2664: 'void std::vector<std::string,std::allocator<std::string>>::push_back(const _Ty &)': cannot convert argument 1 from 'std::vector<std::string,std::allocator<std::string>>' to 'const _Ty &'
+          with
+          [
+              _Ty=std::string
+          ]
+C:\Users\meggi\compilers\Compilers\Compilers\codegeneration.cpp(240,1): message : Reason: cannot convert from 'std::vector<std::string,std::allocator<std::string>>' to 'const _Ty'
+          with
+          [
+              _Ty=std::string
+          ]
+C:\Users\meggi\compilers\Compilers\Compilers\codegeneration.cpp(240,36): message : No user-defined-conversion operator available that can perform this conversion, or the operator cannot be called
+C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\VC\Tools\MSVC\14.28.29333\include\vector(716,10): message : see declaration of 'std::vector<std::string,std::allocator<std::string>>::push_back'
+C:\Users\meggi\compilers\Compilers\Compilers\codegeneration.cpp(253,1): error C2664: 'std::string Visitor::lookUp(std::string)': cannot convert argument 1 from '_Ty' to 'std::string'
+          with
+          [
+              _Ty=ASTNode *
+          ]
+C:\Users\meggi\compilers\Compilers\Compilers\codegeneration.cpp(253,1): message : No constructor could take the source type, or constructor overload resolution was ambiguous
+C:\Users\meggi\compilers\Compilers\Compilers\codegeneration.cpp(143,12): message : see declaration of 'Visitor::lookUp'
+C:\Users\meggi\compilers\Compilers\Compilers\codegeneration.cpp(254,25): error C2676: binary '==': 'std::string' does not define this operator or a conversion to a type acceptable to the predefined operator
+C:\Users\meggi\compilers\Compilers\Compilers\codegeneration.cpp(267,9): error C2064: term does not evaluate to a function taking 1 arguments
+C:\Users\meggi\compilers\Compilers\Compilers\codegeneration.cpp(270,21): error C2676: binary '==': 'std::string' does not define this operator or a conversion to a type acceptable to the predefined operator
+C:\Users\meggi\compilers\Compilers\Compilers\codegeneration.cpp(274,1): error C2664: 'std::vector<std::string,std::allocator<std::string>> stoMem(int)': cannot convert argument 1 from 'std::string' to 'int'
+C:\Users\meggi\compilers\Compilers\Compilers\codegeneration.cpp(274,16): message : No user-defined-conversion operator available that can perform this conversion, or the operator cannot be called
+C:\Users\meggi\compilers\Compilers\Compilers\codegeneration.cpp(28,6): message : see declaration of 'stoMem'
+C:\Users\meggi\compilers\Compilers\Compilers\codegeneration.cpp(280,13): error C2064: term does not evaluate to a function taking 1 arguments
+C:\Users\meggi\compilers\Compilers\Compilers\codegeneration.cpp(282,1): error C2664: 'void std::vector<std::string,std::allocator<std::string>>::push_back(const _Ty &)': cannot convert argument 1 from 'std::vector<std::string,std::allocator<std::string>>' to 'const _Ty &'
+          with
+          [
+              _Ty=std::string
+          ]
+C:\Users\meggi\compilers\Compilers\Compilers\codegeneration.cpp(282,1): message : Reason: cannot convert from 'std::vector<std::string,std::allocator<std::string>>' to 'const _Ty'
+          with
+          [
+              _Ty=std::string
+          ]
+C:\Users\meggi\compilers\Compilers\Compilers\codegeneration.cpp(282,37): message : No user-defined-conversion operator available that can perform this conversion, or the operator cannot be called
+C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\VC\Tools\MSVC\14.28.29333\include\vector(716,10): message : see declaration of 'std::vector<std::string,std::allocator<std::string>>::push_back'
+C:\Users\meggi\compilers\Compilers\Compilers\codegeneration.cpp(283,1): error C2664: 'void std::vector<std::string,std::allocator<std::string>>::push_back(const _Ty &)': cannot convert argument 1 from 'std::vector<std::string,std::allocator<std::string>>' to 'const _Ty &'
+          with
+          [
+              _Ty=std::string
+          ]
+C:\Users\meggi\compilers\Compilers\Compilers\codegeneration.cpp(283,1): message : Reason: cannot convert from 'std::vector<std::string,std::allocator<std::string>>' to 'const _Ty'
+          with
+          [
+              _Ty=std::string
+          ]
+C:\Users\meggi\compilers\Compilers\Compilers\codegeneration.cpp(283,39): message : No user-defined-conversion operator available that can perform this conversion, or the operator cannot be called
+C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\VC\Tools\MSVC\14.28.29333\include\vector(716,10): message : see declaration of 'std::vector<std::string,std::allocator<std::string>>::push_back'
+C:\Users\meggi\compilers\Compilers\Compilers\codegeneration.cpp(285,1): error C2664: 'void std::vector<std::string,std::allocator<std::string>>::push_back(const _Ty &)': cannot convert argument 1 from 'std::vector<std::string,std::allocator<std::string>>' to 'const _Ty &'
+          with
+          [
+              _Ty=std::string
+          ]
+C:\Users\meggi\compilers\Compilers\Compilers\codegeneration.cpp(285,1): message : Reason: cannot convert from 'std::vector<std::string,std::allocator<std::string>>' to 'const _Ty'
+          with
+          [
+              _Ty=std::string
+          ]
+C:\Users\meggi\compilers\Compilers\Compilers\codegeneration.cpp(285,29): message : No user-defined-conversion operator available that can perform this conversion, or the operator cannot be called
+C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\VC\Tools\MSVC\14.28.29333\include\vector(716,10): message : see declaration of 'std::vector<std::string,std::allocator<std::string>>::push_back'
+C:\Users\meggi\compilers\Compilers\Compilers\codegeneration.cpp(286,1): error C2664: 'void std::vector<std::string,std::allocator<std::string>>::push_back(const _Ty &)': cannot convert argument 1 from 'std::vector<std::string,std::allocator<std::string>>' to 'const _Ty &'
+          with
+          [
+              _Ty=std::string
+          ]
+C:\Users\meggi\compilers\Compilers\Compilers\codegeneration.cpp(286,1): message : Reason: cannot convert from 'std::vector<std::string,std::allocator<std::string>>' to 'const _Ty'
+          with
+          [
+              _Ty=std::string
+          ]
+C:\Users\meggi\compilers\Compilers\Compilers\codegeneration.cpp(286,34): message : No user-defined-conversion operator available that can perform this conversion, or the operator cannot be called
+C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\VC\Tools\MSVC\14.28.29333\include\vector(716,10): message : see declaration of 'std::vector<std::string,std::allocator<std::string>>::push_back'
+C:\Users\meggi\compilers\Compilers\Compilers\codegeneration.cpp(288,9): error C2064: term does not evaluate to a function taking 1 arguments
+C:\Users\meggi\compilers\Compilers\Compilers\codegeneration.cpp(292,9): error C2064: term does not evaluate to a function taking 1 arguments
+C:\Users\meggi\compilers\Compilers\Compilers\codegeneration.cpp(293,1): error C2679: binary '=': no operator found which takes a right-hand operand of type 'void' (or there is no acceptable conversion)
+C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\VC\Tools\MSVC\14.28.29333\include\xstring(2881,19): message : could be 'std::basic_string<char,std::char_traits<char>,std::allocator<char>> &std::basic_string<char,std::char_traits<char>,std::allocator<char>>::operator =(const _Elem)'
+          with
+          [
+              _Elem=char
+          ]
+C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\VC\Tools\MSVC\14.28.29333\include\xstring(2877,19): message : or       'std::basic_string<char,std::char_traits<char>,std::allocator<char>> &std::basic_string<char,std::char_traits<char>,std::allocator<char>>::operator =(const _Elem *const )'
+          with
+          [
+              _Elem=char
+          ]
+C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\VC\Tools\MSVC\14.28.29333\include\xstring(2862,19): message : or       'std::basic_string<char,std::char_traits<char>,std::allocator<char>> &std::basic_string<char,std::char_traits<char>,std::allocator<char>>::operator =(const std::basic_string<char,std::char_traits<char>,std::allocator<char>> &)'
+C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\VC\Tools\MSVC\14.28.29333\include\xstring(2763,19): message : or       'std::basic_string<char,std::char_traits<char>,std::allocator<char>> &std::basic_string<char,std::char_traits<char>,std::allocator<char>>::operator =(std::initializer_list<_Elem>)'
+          with
+          [
+              _Elem=char
+          ]
+C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\VC\Tools\MSVC\14.28.29333\include\xstring(2664,19): message : or       'std::basic_string<char,std::char_traits<char>,std::allocator<char>> &std::basic_string<char,std::char_traits<char>,std::allocator<char>>::operator =(std::basic_string<char,std::char_traits<char>,std::allocator<char>> &&) noexcept'
+C:\Users\meggi\compilers\Compilers\Compilers\codegeneration.cpp(293,1): message : while trying to match the argument list '(_Ty, void)'
+          with
+          [
+              _Ty=std::string
+          ]
+C:\Users\meggi\compilers\Compilers\Compilers\codegeneration.cpp(299,1): error C2664: 'void std::vector<std::string,std::allocator<std::string>>::push_back(const _Ty &)': cannot convert argument 1 from 'std::vector<std::string,std::allocator<std::string>>' to 'const _Ty &'
+          with
+          [
+              _Ty=std::string
+          ]
+C:\Users\meggi\compilers\Compilers\Compilers\codegeneration.cpp(299,1): message : Reason: cannot convert from 'std::vector<std::string,std::allocator<std::string>>' to 'const _Ty'
+          with
+          [
+              _Ty=std::string
+          ]
+C:\Users\meggi\compilers\Compilers\Compilers\codegeneration.cpp(299,41): message : No user-defined-conversion operator available that can perform this conversion, or the operator cannot be called
+C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\VC\Tools\MSVC\14.28.29333\include\vector(716,10): message : see declaration of 'std::vector<std::string,std::allocator<std::string>>::push_back'
+C:\Users\meggi\compilers\Compilers\Compilers\codegeneration.cpp(300,1): error C2664: 'void std::vector<std::string,std::allocator<std::string>>::push_back(const _Ty &)': cannot convert argument 1 from 'std::vector<std::string,std::allocator<std::string>>' to 'const _Ty &'
+          with
+          [
+              _Ty=std::string
+          ]
+C:\Users\meggi\compilers\Compilers\Compilers\codegeneration.cpp(300,1): message : Reason: cannot convert from 'std::vector<std::string,std::allocator<std::string>>' to 'const _Ty'
+          with
+          [
+              _Ty=std::string
+          ]
+C:\Users\meggi\compilers\Compilers\Compilers\codegeneration.cpp(300,41): message : No user-defined-conversion operator available that can perform this conversion, or the operator cannot be called
+C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\VC\Tools\MSVC\14.28.29333\include\vector(716,10): message : see declaration of 'std::vector<std::string,std::allocator<std::string>>::push_back'
+C:\Users\meggi\compilers\Compilers\Compilers\codegeneration.cpp(301,1): error C2664: 'void std::vector<std::string,std::allocator<std::string>>::push_back(const _Ty &)': cannot convert argument 1 from 'std::vector<std::string,std::allocator<std::string>>' to 'const _Ty &'
+          with
+          [
+              _Ty=std::string
+          ]
+C:\Users\meggi\compilers\Compilers\Compilers\codegeneration.cpp(301,1): message : Reason: cannot convert from 'std::vector<std::string,std::allocator<std::string>>' to 'const _Ty'
+          with
+          [
+              _Ty=std::string
+          ]
+C:\Users\meggi\compilers\Compilers\Compilers\codegeneration.cpp(301,37): message : No user-defined-conversion operator available that can perform this conversion, or the operator cannot be called
+C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\VC\Tools\MSVC\14.28.29333\include\vector(716,10): message : see declaration of 'std::vector<std::string,std::allocator<std::string>>::push_back'
+C:\Users\meggi\compilers\Compilers\Compilers\codegeneration.cpp(302,1): error C2664: 'void std::vector<std::string,std::allocator<std::string>>::push_back(const _Ty &)': cannot convert argument 1 from 'std::vector<std::string,std::allocator<std::string>>' to 'const _Ty &'
+          with
+          [
+              _Ty=std::string
+          ]
+C:\Users\meggi\compilers\Compilers\Compilers\codegeneration.cpp(302,1): message : Reason: cannot convert from 'std::vector<std::string,std::allocator<std::string>>' to 'const _Ty'
+          with
+          [
+              _Ty=std::string
+          ]
+C:\Users\meggi\compilers\Compilers\Compilers\codegeneration.cpp(302,42): message : No user-defined-conversion operator available that can perform this conversion, or the operator cannot be called
+C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\VC\Tools\MSVC\14.28.29333\include\vector(716,10): message : see declaration of 'std::vector<std::string,std::allocator<std::string>>::push_back'
+C:\Users\meggi\compilers\Compilers\Compilers\codegeneration.cpp(306,1): error C2679: binary '=': no operator found which takes a right-hand operand of type 'void' (or there is no acceptable conversion)
+C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\VC\Tools\MSVC\14.28.29333\include\xstring(2881,19): message : could be 'std::basic_string<char,std::char_traits<char>,std::allocator<char>> &std::basic_string<char,std::char_traits<char>,std::allocator<char>>::operator =(const _Elem)'
+          with
+          [
+              _Elem=char
+          ]
+C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\VC\Tools\MSVC\14.28.29333\include\xstring(2877,19): message : or       'std::basic_string<char,std::char_traits<char>,std::allocator<char>> &std::basic_string<char,std::char_traits<char>,std::allocator<char>>::operator =(const _Elem *const )'
+          with
+          [
+              _Elem=char
+          ]
+C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\VC\Tools\MSVC\14.28.29333\include\xstring(2862,19): message : or       'std::basic_string<char,std::char_traits<char>,std::allocator<char>> &std::basic_string<char,std::char_traits<char>,std::allocator<char>>::operator =(const std::basic_string<char,std::char_traits<char>,std::allocator<char>> &)'
+C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\VC\Tools\MSVC\14.28.29333\include\xstring(2763,19): message : or       'std::basic_string<char,std::char_traits<char>,std::allocator<char>> &std::basic_string<char,std::char_traits<char>,std::allocator<char>>::operator =(std::initializer_list<_Elem>)'
+          with
+          [
+              _Elem=char
+          ]
+C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\VC\Tools\MSVC\14.28.29333\include\xstring(2664,19): message : or       'std::basic_string<char,std::char_traits<char>,std::allocator<char>> &std::basic_string<char,std::char_traits<char>,std::allocator<char>>::operator =(std::basic_string<char,std::char_traits<char>,std::allocator<char>> &&) noexcept'
+C:\Users\meggi\compilers\Compilers\Compilers\codegeneration.cpp(306,1): message : while trying to match the argument list '(_Ty, void)'
+          with
+          [
+              _Ty=std::string
+          ]
+C:\Users\meggi\compilers\Compilers\Compilers\codegeneration.cpp(307,13): error C2064: term does not evaluate to a function taking 1 arguments
+C:\Users\meggi\compilers\Compilers\Compilers\codegeneration.cpp(308,1): error C2679: binary '=': no operator found which takes a right-hand operand of type 'void' (or there is no acceptable conversion)
+C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\VC\Tools\MSVC\14.28.29333\include\xstring(2881,19): message : could be 'std::basic_string<char,std::char_traits<char>,std::allocator<char>> &std::basic_string<char,std::char_traits<char>,std::allocator<char>>::operator =(const _Elem)'
+          with
+          [
+              _Elem=char
+          ]
+C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\VC\Tools\MSVC\14.28.29333\include\xstring(2877,19): message : or       'std::basic_string<char,std::char_traits<char>,std::allocator<char>> &std::basic_string<char,std::char_traits<char>,std::allocator<char>>::operator =(const _Elem *const )'
+          with
+          [
+              _Elem=char
+          ]
+C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\VC\Tools\MSVC\14.28.29333\include\xstring(2862,19): message : or       'std::basic_string<char,std::char_traits<char>,std::allocator<char>> &std::basic_string<char,std::char_traits<char>,std::allocator<char>>::operator =(const std::basic_string<char,std::char_traits<char>,std::allocator<char>> &)'
+C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\VC\Tools\MSVC\14.28.29333\include\xstring(2763,19): message : or       'std::basic_string<char,std::char_traits<char>,std::allocator<char>> &std::basic_string<char,std::char_traits<char>,std::allocator<char>>::operator =(std::initializer_list<_Elem>)'
+          with
+          [
+              _Elem=char
+          ]
+C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\VC\Tools\MSVC\14.28.29333\include\xstring(2664,19): message : or       'std::basic_string<char,std::char_traits<char>,std::allocator<char>> &std::basic_string<char,std::char_traits<char>,std::allocator<char>>::operator =(std::basic_string<char,std::char_traits<char>,std::allocator<char>> &&) noexcept'
+C:\Users\meggi\compilers\Compilers\Compilers\codegeneration.cpp(308,1): message : while trying to match the argument list '(_Ty, void)'
+          with
+          [
+              _Ty=std::string
+          ]
+C:\Users\meggi\compilers\Compilers\Compilers\codegeneration.cpp(313,1): error C2664: 'std::vector<std::string,std::allocator<std::string>> loadAConst(int)': cannot convert argument 1 from 'std::string' to 'int'
+C:\Users\meggi\compilers\Compilers\Compilers\codegeneration.cpp(313,55): message : No user-defined-conversion operator available that can perform this conversion, or the operator cannot be called
+C:\Users\meggi\compilers\Compilers\Compilers\codegeneration.cpp(17,6): message : see declaration of 'loadAConst'
+C:\Users\meggi\compilers\Compilers\Compilers\codegeneration.cpp(314,1): error C2664: 'void std::vector<std::string,std::allocator<std::string>>::push_back(const _Ty &)': cannot convert argument 1 from 'std::vector<std::string,std::allocator<std::string>>' to 'const _Ty &'
+          with
+          [
+              _Ty=std::string
+          ]
+C:\Users\meggi\compilers\Compilers\Compilers\codegeneration.cpp(314,1): message : Reason: cannot convert from 'std::vector<std::string,std::allocator<std::string>>' to 'const _Ty'
+          with
+          [
+              _Ty=std::string
+          ]
+C:\Users\meggi\compilers\Compilers\Compilers\codegeneration.cpp(314,33): message : No user-defined-conversion operator available that can perform this conversion, or the operator cannot be called
+C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\VC\Tools\MSVC\14.28.29333\include\vector(716,10): message : see declaration of 'std::vector<std::string,std::allocator<std::string>>::push_back'
+C:\Users\meggi\compilers\Compilers\Compilers\codegeneration.cpp(315,8): error C2064: term does not evaluate to a function taking 1 arguments
+C:\Users\meggi\compilers\Compilers\Compilers\codegeneration.cpp(316,1): error C2664: 'void std::vector<std::string,std::allocator<std::string>>::push_back(const _Ty &)': cannot convert argument 1 from 'std::vector<std::string,std::allocator<std::string>>' to 'const _Ty &'
+          with
+          [
+              _Ty=std::string
+          ]
+C:\Users\meggi\compilers\Compilers\Compilers\codegeneration.cpp(316,1): message : Reason: cannot convert from 'std::vector<std::string,std::allocator<std::string>>' to 'const _Ty'
+          with
+          [
+              _Ty=std::string
+          ]
+C:\Users\meggi\compilers\Compilers\Compilers\codegeneration.cpp(316,30): message : No user-defined-conversion operator available that can perform this conversion, or the operator cannot be called
+C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\VC\Tools\MSVC\14.28.29333\include\vector(716,10): message : see declaration of 'std::vector<std::string,std::allocator<std::string>>::push_back'
+C:\Users\meggi\compilers\Compilers\Compilers\codegeneration.cpp(380,22): error C2679: binary '=': no operator found which takes a right-hand operand of type 'int' (or there is no acceptable conversion)
+C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\VC\Tools\MSVC\14.28.29333\include\vector(1175,13): message : could be 'std::vector<std::string,std::allocator<std::string>> &std::vector<std::string,std::allocator<std::string>>::operator =(std::initializer_list<_Ty>)'
+          with
+          [
+              _Ty=std::string
+          ]
+C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\VC\Tools\MSVC\14.28.29333\include\vector(1167,13): message : or       'std::vector<std::string,std::allocator<std::string>> &std::vector<std::string,std::allocator<std::string>>::operator =(const std::vector<std::string,std::allocator<std::string>> &)'
+C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\VC\Tools\MSVC\14.28.29333\include\vector(664,13): message : or       'std::vector<std::string,std::allocator<std::string>> &std::vector<std::string,std::allocator<std::string>>::operator =(std::vector<std::string,std::allocator<std::string>> &&) noexcept(<expr>)'
+C:\Users\meggi\compilers\Compilers\Compilers\codegeneration.cpp(380,22): message : while trying to match the argument list '(std::vector<std::string,std::allocator<std::string>>, int)'
+C:\Users\meggi\compilers\Compilers\Compilers\codegeneration.cpp(382,5): error C2064: term does not evaluate to a function taking 1 arguments
+C:\Users\meggi\compilers\Compilers\Compilers\codegeneration.cpp(400,70): error C2679: binary '<<': no operator found which takes a right-hand operand of type 'std::vector<std::string,std::allocator<std::string>>' (or there is no acceptable conversion)
+C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\VC\Tools\MSVC\14.28.29333\include\ostream(465,39): message : could be 'std::basic_ostream<char,std::char_traits<char>> &std::basic_ostream<char,std::char_traits<char>>::operator <<(std::basic_streambuf<char,std::char_traits<char>> *)'
+C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\VC\Tools\MSVC\14.28.29333\include\ostream(440,39): message : or       'std::basic_ostream<char,std::char_traits<char>> &std::basic_ostream<char,std::char_traits<char>>::operator <<(const void *)'
+C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\VC\Tools\MSVC\14.28.29333\include\ostream(422,39): message : or       'std::basic_ostream<char,std::char_traits<char>> &std::basic_ostream<char,std::char_traits<char>>::operator <<(long double)'
+C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\VC\Tools\MSVC\14.28.29333\include\ostream(404,39): message : or       'std::basic_ostream<char,std::char_traits<char>> &std::basic_ostream<char,std::char_traits<char>>::operator <<(double)'
+C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\VC\Tools\MSVC\14.28.29333\include\ostream(386,39): message : or       'std::basic_ostream<char,std::char_traits<char>> &std::basic_ostream<char,std::char_traits<char>>::operator <<(float)'
+C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\VC\Tools\MSVC\14.28.29333\include\ostream(368,39): message : or       'std::basic_ostream<char,std::char_traits<char>> &std::basic_ostream<char,std::char_traits<char>>::operator <<(unsigned __int64)'
+C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\VC\Tools\MSVC\14.28.29333\include\ostream(350,39): message : or       'std::basic_ostream<char,std::char_traits<char>> &std::basic_ostream<char,std::char_traits<char>>::operator <<(__int64)'
+C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\VC\Tools\MSVC\14.28.29333\include\ostream(332,39): message : or       'std::basic_ostream<char,std::char_traits<char>> &std::basic_ostream<char,std::char_traits<char>>::operator <<(unsigned long)'
+C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\VC\Tools\MSVC\14.28.29333\include\ostream(314,39): message : or       'std::basic_ostream<char,std::char_traits<char>> &std::basic_ostream<char,std::char_traits<char>>::operator <<(long)'
+C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\VC\Tools\MSVC\14.28.29333\include\ostream(295,39): message : or       'std::basic_ostream<char,std::char_traits<char>> &std::basic_ostream<char,std::char_traits<char>>::operator <<(unsigned int)'
+C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\VC\Tools\MSVC\14.28.29333\include\ostream(269,39): message : or       'std::basic_ostream<char,std::char_traits<char>> &std::basic_ostream<char,std::char_traits<char>>::operator <<(int)'
+C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\VC\Tools\MSVC\14.28.29333\include\ostream(250,39): message : or       'std::basic_ostream<char,std::char_traits<char>> &std::basic_ostream<char,std::char_traits<char>>::operator <<(unsigned short)'
+C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\VC\Tools\MSVC\14.28.29333\include\ostream(216,39): message : or       'std::basic_ostream<char,std::char_traits<char>> &std::basic_ostream<char,std::char_traits<char>>::operator <<(short)'
+C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\VC\Tools\MSVC\14.28.29333\include\ostream(198,39): message : or       'std::basic_ostream<char,std::char_traits<char>> &std::basic_ostream<char,std::char_traits<char>>::operator <<(bool)'
+C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\VC\Tools\MSVC\14.28.29333\include\ostream(193,39): message : or       'std::basic_ostream<char,std::char_traits<char>> &std::basic_ostream<char,std::char_traits<char>>::operator <<(std::ios_base &(__cdecl *)(std::ios_base &))'
+C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\VC\Tools\MSVC\14.28.29333\include\ostream(188,39): message : or       'std::basic_ostream<char,std::char_traits<char>> &std::basic_ostream<char,std::char_traits<char>>::operator <<(std::basic_ios<char,std::char_traits<char>> &(__cdecl *)(std::basic_ios<char,std::char_traits<char>> &))'
+C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\VC\Tools\MSVC\14.28.29333\include\ostream(183,39): message : or       'std::basic_ostream<char,std::char_traits<char>> &std::basic_ostream<char,std::char_traits<char>>::operator <<(std::basic_ostream<char,std::char_traits<char>> &(__cdecl *)(std::basic_ostream<char,std::char_traits<char>> &))'
+C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\VC\Tools\MSVC\14.28.29333\include\ostream(998,32): message : or       'std::basic_ostream<char,std::char_traits<char>> &std::operator <<<char,std::char_traits<char>>(std::basic_ostream<char,std::char_traits<char>> &,const std::error_code &)'
+C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\VC\Tools\MSVC\14.28.29333\include\ostream(912,31): message : or       'std::basic_ostream<char,std::char_traits<char>> &std::operator <<<std::char_traits<char>>(std::basic_ostream<char,std::char_traits<char>> &,unsigned char)'
+C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\VC\Tools\MSVC\14.28.29333\include\ostream(906,31): message : or       'std::basic_ostream<char,std::char_traits<char>> &std::operator <<<std::char_traits<char>>(std::basic_ostream<char,std::char_traits<char>> &,const unsigned char *)'
+C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\VC\Tools\MSVC\14.28.29333\include\ostream(901,31): message : or       'std::basic_ostream<char,std::char_traits<char>> &std::operator <<<std::char_traits<char>>(std::basic_ostream<char,std::char_traits<char>> &,signed char)'
+C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\VC\Tools\MSVC\14.28.29333\include\ostream(895,31): message : or       'std::basic_ostream<char,std::char_traits<char>> &std::operator <<<std::char_traits<char>>(std::basic_ostream<char,std::char_traits<char>> &,const signed char *)'
+C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\VC\Tools\MSVC\14.28.29333\include\ostream(778,31): message : or       'std::basic_ostream<char,std::char_traits<char>> &std::operator <<<std::char_traits<char>>(std::basic_ostream<char,std::char_traits<char>> &,char)'
+C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\VC\Tools\MSVC\14.28.29333\include\ostream(733,31): message : or       'std::basic_ostream<char,std::char_traits<char>> &std::operator <<<std::char_traits<char>>(std::basic_ostream<char,std::char_traits<char>> &,const char *)'
+C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\VC\Tools\MSVC\14.28.29333\include\ostream(697,32): message : or       'std::basic_ostream<char,std::char_traits<char>> &std::operator <<<char,std::char_traits<char>>(std::basic_ostream<char,std::char_traits<char>> &,char)'
+C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\VC\Tools\MSVC\14.28.29333\include\ostream(653,32): message : or       'std::basic_ostream<char,std::char_traits<char>> &std::operator <<<char,std::char_traits<char>>(std::basic_ostream<char,std::char_traits<char>> &,const char *)'
+C:\Users\meggi\compilers\Compilers\Compilers\codegeneration.cpp(400,70): message : while trying to match the argument list '(std::basic_ostream<char,std::char_traits<char>>, std::vector<std::string,std::allocator<std::string>>)'
+C:\Users\meggi\compilers\Compilers\Compilers\semantics.cpp(40,23): warning C4018: '<': signed/unsigned mismatch
+C:\Users\meggi\compilers\Compilers\Compilers\semantics.cpp(52,23): warning C4018: '<': signed/unsigned mismatch
+C:\Users\meggi\compilers\Compilers\Compilers\semantics.cpp(62,23): warning C4018: '<': signed/unsigned mismatch
+C:\Users\meggi\compilers\Compilers\Compilers\semantics.cpp(73,23): warning C4018: '<': signed/unsigned mismatch
+C:\Users\meggi\compilers\Compilers\Compilers\semantics.cpp(101,23): warning C4018: '<': signed/unsigned mismatch
+C:\Users\meggi\compilers\Compilers\Compilers\semantics.cpp(126,27): warning C4018: '<': signed/unsigned mismatch
+C:\Users\meggi\compilers\Compilers\Compilers\semantics.cpp(367,27): warning C4018: '<': signed/unsigned mismatch
+C:\Users\meggi\compilers\Compilers\Compilers\semantics.cpp(398,27): warning C4018: '<': signed/unsigned mismatch
 C:\Users\meggi\compilers\Compilers\Compilers\parser.cpp(77,23): warning C4018: '<': signed/unsigned mismatch
-C:\Users\meggi\compilers\Compilers\Compilers\parser.cpp(617,24): warning C4018: '<': signed/unsigned mismatch
-  Compilers.vcxproj -> C:\Users\meggi\compilers\Compilers\Debug\Compilers.exe
+C:\Users\meggi\compilers\Compilers\Compilers\parser.cpp(627,24): warning C4018: '<': signed/unsigned mismatch
